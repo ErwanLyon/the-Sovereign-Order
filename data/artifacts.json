@@ -1,0 +1,555 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "name": "Amulette d’Athéna",
+      "fields": [
+        [
+          "Propriétés",
+          "Artefact royal mentionné ; propriétés non détaillées dans le récit (sagesse/protection présumées)."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Inventoriée parmi les prises royales."
+        ],
+        [
+          "Risques/Enjeux",
+          "Inconnu — pouvoir potentiel lié au conseil/à la clairvoyance."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Amulettes d’orientation céleste (ensemble)",
+      "fields": [
+        [
+          "Propriétés",
+          "Navigation sacrée/repérage ; mentionnées dans les inventaires anciens."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Inventoriées ; usage ponctuel possible."
+        ],
+        [
+          "Risques/Enjeux",
+          "Accès facilité à des lieux scellés."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Bracelets de Soumission (paire)",
+      "fields": [
+        [
+          "Propriétés",
+          "Génèrent un bouclier déflecteur contre projectiles et attaques d’énergie."
+        ],
+        [
+          "Détenteur actuel",
+          "Sovereign (confisqués à Diana ; non utilisés)."
+        ],
+        [
+          "Statut/Usage",
+          "Stockés avec les autres trophées de Diana."
+        ],
+        [
+          "Risques/Enjeux",
+          "Pourraient rendre le porteur quasi intouchable."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Bracelet de Vérité Noire",
+      "fields": [
+        [
+          "Propriétés",
+          "Ne révèle pas la vérité objective mais ce que la cible croit vrai, manipulant ainsi sa perception."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Archivé ; non utilisé à l’écran."
+        ],
+        [
+          "Risques/Enjeux",
+          "Confusions dirigées, faux aveux, reconditionnements biaisés."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Ceinture dorée (de Gaea)",
+      "fields": [
+        [
+          "Propriétés",
+          "Super‑force et guérison accélérée hors de Themyscira (maintient les pouvoirs amazones en exil)."
+        ],
+        [
+          "Détenteur actuel",
+          "Sovereign (confisquée à Diana ; non utilisée)."
+        ],
+        [
+          "Statut/Usage",
+          "Stockée ; atout majeur si portée par un humain."
+        ],
+        [
+          "Risques/Enjeux",
+          "Fort déséquilibre physique si le Sovereign l’active lui‑même."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Codex d’Acheron",
+      "fields": [
+        [
+          "Propriétés",
+          "Grimoire rituel permettant de transférer l’autorité sacrée d’une lignée à une autre sans cérémonie publique."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt (extrait des galeries interdites)."
+        ],
+        [
+          "Statut/Usage",
+          "Déjà employé en support à la passation et à la légitimation interne."
+        ],
+        [
+          "Risques/Enjeux",
+          "Ancre symbolique du pouvoir ; si volé, il pourrait reconfigurer la souveraineté."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Couronne de Bénir",
+      "fields": [
+        [
+          "Propriétés",
+          "Accorde un pardon/bénédiction divine à une âme jugée indigne."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt (refuse de la porter, conservée « au cas où »)."
+        ],
+        [
+          "Statut/Usage",
+          "Archivée ; outil d’amnistie rituelle."
+        ],
+        [
+          "Risques/Enjeux",
+          "Peut blanchir symboliquement des traîtresses et reconfigurer des loyautés."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Couronne Royale",
+      "fields": [
+        [
+          "Propriétés",
+          "Lien avec les déesses ; forte résistance au contrôle mental/corruption ; symbole de souveraineté."
+        ],
+        [
+          "Détenteur actuel",
+          "Aucune saisie formelle : laissée dans les anciens appartements royaux (désormais quartiers d’Erhardt)."
+        ],
+        [
+          "Statut/Usage",
+          "Non cataloguée officiellement ; probablement reléguée dans la chambre/les réserves."
+        ],
+        [
+          "Risques/Enjeux",
+          "Objet de bascule : si récupérée par une résistante, pourrait restaurer une volonté souveraine."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Diadème de l’Éclipse",
+      "fields": [
+        [
+          "Propriétés",
+          "Octroie à son porteur une autorité absolue sur les amazones ; jugé trop dangereux, scellé jadis."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Conservé sous contrôle ; pas encore activé."
+        ],
+        [
+          "Risques/Enjeux",
+          "Soumission de masse et rupture définitive du libre arbitre amazone."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Diadème doré (de Diana)",
+      "fields": [
+        [
+          "Propriétés",
+          "Lien mental avec les amazones ; protection contre le contrôle mental."
+        ],
+        [
+          "Détenteur actuel",
+          "Sovereign (confisqué ; non utilisé)."
+        ],
+        [
+          "Statut/Usage",
+          "Stocké ; clé potentielle de coordination amazone si restitué."
+        ],
+        [
+          "Risques/Enjeux",
+          "S’il est réactivé par une résistante, pourrait contrecarrer la domination mentale."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Diana",
+      "fields": [
+        [
+          "Propriétés",
+          "Considérée comme artefact vivant par le Sovereign. Servante et esclave absolue, n’existant que dans l’obéissance. Lui permet d’accéder à toutes les connaissances de Themyscira, des héros dans le monde des hommes, et des documents secrets de l’IADC"
+        ],
+        [
+          "Détenteur actuel",
+          "Sovereign"
+        ],
+        [
+          "Statut/Usage",
+          "N’est plus considérée comme une personne, mais un outil au service du Sovereign, qui l’utilise comme bon lui semble pour exécuter ses ordres, et accéder à toutes ses connaissances"
+        ],
+        [
+          "Risques/Enjeux",
+          "Ancienne Wonder Woman, sa volonté aujourd’hui détruite pourrait revenir un jour"
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Epée d’Athéna",
+      "fields": [
+        [
+          "Propriétés",
+          "Inconnu"
+        ],
+        [
+          "Détenteur actuel",
+          "Antiope"
+        ],
+        [
+          "Statut/Usage",
+          "Inconnu"
+        ],
+        [
+          "Risques/Enjeux",
+          "Inconnu"
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Epée de Zeus",
+      "fields": [
+        [
+          "Propriétés",
+          "Epée pouvant invoquer le pouvoir de la foudre"
+        ],
+        [
+          "Détenteur actuel",
+          "général Stark, qui l’a confisqué à Cassie"
+        ],
+        [
+          "Statut/Usage",
+          "Utilisé par Cassie pour détruire un mur lors de l’attaque du Palais Royal, puis lors de ses combats"
+        ],
+        [
+          "Risques/Enjeux",
+          "Permet à Stark de prendre l’avantage au combat rapproché contre une amazone"
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Fragments de lances sacrées (ensemble)",
+      "fields": [
+        [
+          "Propriétés",
+          "Vestiges d’armes bénies ; propriétés non actives isolément."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Conservés à des fins d’étude/rituel."
+        ],
+        [
+          "Risques/Enjeux",
+          "Si recomposés, pourraient reconstituer une arme divine."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Lasso Noir",
+      "fields": [
+        [
+          "Propriétés",
+          "Permet d’ancrer des fausses « vérités » dans l’esprit d’une victime. Porté en permanence, il écrase toute pensée contraire à celles imposées par son propriétaire."
+        ],
+        [
+          "Détenteur actuel",
+          "Diana (Alpha‑Zéro), propriété du Sovereign."
+        ],
+        [
+          "Statut/Usage",
+          "Enroulé en continu autour du corps nu de Diana ; ancrage constant de sa soumission."
+        ],
+        [
+          "Risques/Enjeux",
+          "Efface durablement la volonté propre. Instrument central de la corruption de Diana."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Lasso d’Hestia (Lasso de la Vérité)",
+      "fields": [
+        [
+          "Propriétés",
+          "Contraint à dire la vérité et peut forcer des révélations complètes sous l’emprise du lien lumineux."
+        ],
+        [
+          "Détenteur actuel",
+          "Sovereign (confisqué à Diana ; porté à la ceinture)."
+        ],
+        [
+          "Statut/Usage",
+          "Utilisé récemment pour obtenir l’emplacement d’un camp rebelle ; conservé comme arme d’interrogatoire."
+        ],
+        [
+          "Risques/Enjeux",
+          "Met à nu les réseaux de résistance ; peut briser la confiance entre amazones."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Manuscrits d’origine divine (corpus)",
+      "fields": [
+        [
+          "Propriétés",
+          "Textes rituels/techniques ; recèlent des protocoles de transfert, de sceaux et d’interdits."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Exploités pour légitimer des réformes et verrouiller des sanctuaires."
+        ],
+        [
+          "Risques/Enjeux",
+          "Fuite documentaire = brèche stratégique pour la Résistance."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Masque de Kalliste",
+      "fields": [
+        [
+          "Propriétés",
+          "Donne à son porteur une apparence divine pendant une heure ; utilisation limitée à une fois par lune."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt (récupéré des coffres royaux)."
+        ],
+        [
+          "Statut/Usage",
+          "Archivé ; non déployé jusqu’ici."
+        ],
+        [
+          "Risques/Enjeux",
+          "Capacité d’influence/charisme extrême ; risques d’usurpation rituelle."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Miroir d’Harmonie",
+      "fields": [
+        [
+          "Propriétés",
+          "Artefact royal ; effet non explicité (harmonisation/alignement spirituel présumés)."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Archivé."
+        ],
+        [
+          "Risques/Enjeux",
+          "Inconnu ; pourrait pacifier ou reconfigurer des esprits."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Œil de Calypso",
+      "fields": [
+        [
+          "Propriétés",
+          "Sphère pâle et trouble révélant un œil jaune : l’observateur obéit aux ordres du porteur."
+        ],
+        [
+          "Détenteur actuel",
+          "Lieutenant Khrun (après l’avoir utilisé pour reprogrammer Artemis)."
+        ],
+        [
+          "Statut/Usage",
+          "Actif ; sert à sceller l’obéissance d’Artemis et potentiellement d’autres cibles."
+        ],
+        [
+          "Risques/Enjeux",
+          "Asservissement instantané de quiconque croise le regard ; changement d’équilibre de pouvoir si mal contrôlé."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Pierre d’Eunoia",
+      "fields": [
+        [
+          "Propriétés",
+          "Cristal spiralé qui amplifie la pensée/émotion dominante du sujet exposé (soumission d’Hippolyta)."
+        ],
+        [
+          "Détenteur actuel",
+          "Hippolyta (porteuse) ; contrôle et autorité d’usage par le Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Portée au cou ; utilisée par Erhardt pour renforcer la docilité et dissoudre tout repli."
+        ],
+        [
+          "Risques/Enjeux",
+          "Renforce selon l’état intérieur : dangereuse si un autre affect domine ; outil de consolidation mentale."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Sceau d’Obsequium",
+      "fields": [
+        [
+          "Propriétés",
+          "Permet à son porteur de faire croire toute vérité qu’il prononce. Ne fonctionne que sur les femmes."
+        ],
+        [
+          "Détenteur actuel",
+          "générale Voss"
+        ],
+        [
+          "Statut/Usage",
+          "Porté au cou, à aider Voss à asservir la zone Sud et être considérée comme la Reine légitime, et développer un culte autour d’elle"
+        ],
+        [
+          "Risques/Enjeux",
+          "Très dangereux, pouvant permettre d’asservir toutes les amazones"
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Sceptre de l’Équilibre",
+      "fields": [
+        [
+          "Propriétés",
+          "Annule les effets de persuasion/contrôle magique dans un rayon restreint."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt (localisé dans la crypte d’Argès)."
+        ],
+        [
+          "Statut/Usage",
+          "Archivé ; pourrait contrer l’Œil de Calypso, la Pierre d’Eunoia ou d’autres dominations."
+        ],
+        [
+          "Risques/Enjeux",
+          "Neutralise aussi les atouts de l’Ordre s’il est soustrait à son contrôle."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Sceptre de Vérité",
+      "fields": [
+        [
+          "Propriétés",
+          "Mentionné parmi les reliques ; propriétés précises non établies dans le récit."
+        ],
+        [
+          "Détenteur actuel",
+          "Commandant Erhardt."
+        ],
+        [
+          "Statut/Usage",
+          "Conservé avec les autres reliques."
+        ],
+        [
+          "Risques/Enjeux",
+          "Non documenté."
+        ]
+      ],
+      "parts": []
+    },
+    {
+      "name": "Sceptre Rouge",
+      "fields": [
+        [
+          "Propriétés",
+          "Inconnu"
+        ],
+        [
+          "Détenteur actuel",
+          "Roi Gobelin"
+        ],
+        [
+          "Statut/Usage",
+          "Inconnu"
+        ],
+        [
+          "Risques/Enjeux",
+          "Inconnu"
+        ]
+      ],
+      "parts": []
+    }
+  ]
+}

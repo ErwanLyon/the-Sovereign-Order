@@ -1,0 +1,759 @@
+{
+  "version": 1,
+  "entries": [
+    {
+      "name": "Amazone tiède",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Les amazones « tièdes » sont des amazones n’étant pas encore totalement soumise à l’Ordre, mais pas rebelles non plus : elles obéissent parfois, sans tout accepter non plus.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Amazonium",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Métal n’existant que sur l’île, présent dans les mines. Ce métal a des propriétés divines, il compose la plupart des artefacts divins.",
+          "list": false
+        },
+        {
+          "text": "Il est extrait par l’Ordre pour être utilisé plus tard.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Ashkara",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Capitale de l’île de Bana-Mighdall, située au centre de l’île. Elle possède son propre palais royal, où vit la reine Antiope.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Astrapyra",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ville principale de l’Est, située en haut des falaises, quasiment inaccessible.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "AXE",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Acronyme pour Amazon Extradition Entity, la branche militaire armée de l’Ordre.",
+          "list": false
+        },
+        {
+          "text": "Ses soldats portent une tenue noire, avec gilet, casque, pantalon militaire, fusils mitrailleurs, pistolet…",
+          "list": false
+        },
+        {
+          "text": "Les amazones intégrées à l’AXE portent une tenue intégrale noire en latex ultra moulante, avec insigne de l’AXE sur la poitrine, et talons intégrés.",
+          "list": false
+        },
+        {
+          "text": "L’insigne de l’AXE est un double triangle inversé.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Bana-Mighdall",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ile voisine de Themyscira, située au Sud-Est.",
+          "list": false
+        },
+        {
+          "text": "Elle possède une culture et une architecture différente de Themyscira, plus brute.",
+          "list": false
+        },
+        {
+          "text": "Elle est dirigée par la Reine Anthiope, la sœur d’Hippolyta.\nDepuis l’arrivée de l’Ordre, elle est dirigée par le Général Darius Vale.",
+          "list": false
+        },
+        {
+          "text": "L’île est historiquement indépendante, bien que rattachée à Themyscira grâce au lien entre Hippolyta et Antiope.",
+          "list": false
+        },
+        {
+          "text": "Depuis sa prise par l’Ordre, une gigantesque tour noire, entièrement lisse, semble avoir été construite au centre de l’île.",
+          "list": false
+        },
+        {
+          "text": "Elle possède sa propre capitale, Ashkara, et une grande ville avec un port, au Nord de l’île, Kherasya.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Capitale",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Plus grande ville et capitale de l’île de Themyscira, située au centre de l’île.",
+          "list": false
+        },
+        {
+          "text": "Elle est le point central de direction et le centre névralgique, symbole de la puissance des amazones, et lieu de vie de la reine Hippolyta.",
+          "list": false
+        },
+        {
+          "text": "Elle abrite aujourd’hui plusieurs lieu clés :",
+          "list": false
+        },
+        {
+          "text": "La Caserne principale de l’AXE",
+          "list": true
+        },
+        {
+          "text": "Le Palais Royal",
+          "list": true
+        },
+        {
+          "text": "Le Dortoir-Ecole",
+          "list": true
+        },
+        {
+          "text": "La Grande Bibliothèque Amazone",
+          "list": true
+        },
+        {
+          "text": "Le Laboratoire de Reprogrammation",
+          "list": true
+        }
+      ]
+    },
+    {
+      "name": "Caserne principale de l’AXE",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Caserne des soldats située dans la capitale.",
+          "list": false
+        },
+        {
+          "text": "Elle regroupe les soldats et les généraux Krüger et Von Müller.",
+          "list": false
+        },
+        {
+          "text": "Elle possède ses propres outils pour endoctriner les amazones soldates.",
+          "list": false
+        },
+        {
+          "text": "Centre d’Alignement",
+          "list": false
+        },
+        {
+          "text": "Centre de conditionnement situé dans la ville de Midéa.",
+          "list": false
+        },
+        {
+          "text": "Il s’agit d’un complexe permettant l’endoctrinement des amazones pour servir Voss.",
+          "list": false
+        },
+        {
+          "text": "Il se compose de 5 « Voies », qui permettent toutes un conditionnement différent, en fonction de la personnalité de l’amazone :",
+          "list": false
+        },
+        {
+          "text": "La Voie de la Dévotion",
+          "list": true
+        },
+        {
+          "text": "La Voie de la Loyauté",
+          "list": true
+        },
+        {
+          "text": "La Voie de la Discipline",
+          "list": true
+        },
+        {
+          "text": "La Voie de la Rédemption",
+          "list": true
+        },
+        {
+          "text": "La Voie de la Clarté",
+          "list": true
+        }
+      ]
+    },
+    {
+      "name": "Chalyra",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ville principale du Nord, située au milieu des montagnes, toujours enneigées.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Dilatation temporelle",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Phénomène présent sur Themyscira.",
+          "list": false
+        },
+        {
+          "text": "La dilation temporelle fait s’écouler différemment le temps entre Themyscira et le monde des Hommes. Pour un jour écoulé dans le monde des Hommes, six mois s’écoulent sur Themyscira. Les amazones, insensibles au temps (car immortelles), ne ressentent pas le temps de la même façon que les humains.",
+          "list": false
+        },
+        {
+          "text": "Cette dilatation a permis à l’Ordre de transformer l’île en profondeur, installant et construisant de nombreuses structures, et de mener une propagande active, ainsi qu’éduquer les nouvelles générations d’amazones selon les principes de l’Ordre, sans que le monde extérieur ne remarque les changements, quelques jours seulement s’étant écoulés, pour plus de dix ans sur Themyscira.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Dortoir-Ecole",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ecole où vivent les jeunes élèves amazones, située dans la capitale.",
+          "list": false
+        },
+        {
+          "text": "Il leur est enseigné l’obéissance, la soumission, et l’acceptation de la société patriarcale comme norme, formant les nouvelles générations",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Elyrion",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Race équine sacrée originaire de Themyscira.\nPlus grands et plus endurants que les chevaux du monde des hommes, les Elyrions sont connus pour leur intelligence exceptionnelle et leur capacité à tisser un lien presque empathique avec leur cavalière. Ils sont généralement montés par les amazones d’élite.",
+          "list": false
+        },
+        {
+          "text": "On dit qu’un Elyrion ne choisit qu’une seule amazone dans sa vie.",
+          "list": false
+        },
+        {
+          "text": "Caractéristiques :",
+          "list": false
+        },
+        {
+          "text": "Robes diverses (blanches, noire, grise, argentée…)",
+          "list": false
+        },
+        {
+          "text": "Regard clair, presque humain",
+          "list": false
+        },
+        {
+          "text": "Endurance extrême, capable de traverser désert et montagne",
+          "list": false
+        },
+        {
+          "text": "Ils sont montés sans scelle ni équipement par les amazones, gardant leur fougue sauvage",
+          "list": false
+        },
+        {
+          "text": "Depuis la prise de l’île, les Elyrions ont été confisqués par les soldats de l’Ordre, les amazones ayant interdiction de les monter.",
+          "list": false
+        },
+        {
+          "text": "Ils sont maintenant entièrement équipés (scelle, mors, harnais…) et sont montés par les hauts gradés (les généraux, le commandant).",
+          "list": false
+        },
+        {
+          "text": "Liste des Elyrions et leurs anciens / nouveaux propriétaires :",
+          "list": false
+        },
+        {
+          "text": "Elyrion entièrement blanc, majestueux  Hippolyta / Erhardt",
+          "list": true
+        },
+        {
+          "text": "Elyrion entièrement noir, fougueux  Antiope",
+          "list": true
+        },
+        {
+          "text": "Elyrion entièrement gris  Diana",
+          "list": true
+        },
+        {
+          "text": "Elyrion à la robe argentée, le crin noir  Nubia / Harden",
+          "list": true
+        },
+        {
+          "text": "Elyrion blanc, avec des taches noires  Artemis",
+          "list": true
+        },
+        {
+          "text": "Elyrion à la robe beige clair  Cassie / Krauss",
+          "list": true
+        },
+        {
+          "text": "Elyrion marron foncé  Donna",
+          "list": true
+        },
+        {
+          "text": "Elyrion rayé comme un zèbre  Drusilla",
+          "list": true
+        },
+        {
+          "text": "Elyrion bleu nuit, avec une corne rouge sang  Voss",
+          "list": true
+        }
+      ]
+    },
+    {
+      "name": "Front Nord",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Branche Nord de la Résistance, dirigé par Cassie. Le QG est situé dans une ancienne mine abandonnée, avec une grande cavité principale et des galeries annexes. Lorsque Cassie a été capturée par l’Ordre, Myrine et Ilyra ont dirigées le Front Nord.",
+          "list": false
+        },
+        {
+          "text": "Le QG a maintenant été entièrement conquit et intégré à la branche Nord de l’Ordre, par Krauss.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Front Sud",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Branche Sud de la Résistance, dirigée par Artemis. Le QG est situé en plein milieu du désert, rendu invisible grâce aux pouvoirs de Mirage. Il est fait d’un amas de roches volcaniques noires, avec de vastes salles creusées dedans.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Grande Bibliothèque Amazone",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Bibliothèque monumentale regroupant la plupart des écrits amazones, actuellement en cours de réécriture par Hippolyta, sous la direction de Stark.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Grande Prison",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Prison de l’île, construite au cœur des falaises.",
+          "list": false
+        },
+        {
+          "text": "Les cellules sont creusées dans la roche, une lourde porte fermant l’entrée.",
+          "list": false
+        },
+        {
+          "text": "La cellule est entourée de 3 murs, le fond donnant sur le vide des falaises, avec les rochers escarpés en bas, rendant toute évasion impossible.",
+          "list": false
+        },
+        {
+          "text": "Haut Conseil",
+          "list": false
+        },
+        {
+          "text": "Réunion exceptionnelle au Palais Royal pour prendre les décisions majeure de l’île.",
+          "list": false
+        },
+        {
+          "text": "Il était auparavant dirigé par Hippolyta, avec les principales amazones : Antiope, Artemis, Nubia, Cassie, ainsi que des prêtresses, et d’autres représentantes.",
+          "list": false
+        },
+        {
+          "text": "Il est aujourd'hui dirigé par Erhardt, avec uniquement des hommes : les 9 Généraux, et Vaek.",
+          "list": false
+        },
+        {
+          "text": "C’est un évènement majeur, qui sert aussi de démonstration de force et de puissance par l’Ordre, chaque Général arrivant de façon théâtrale.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Hiérarchie de l’AXE",
+      "fields": [],
+      "parts": [
+        {
+          "text": "L’AXE, la branche armée de l’Ordre, est composée ainsi :",
+          "list": false
+        },
+        {
+          "text": "Chef suprême : Sovereign",
+          "list": true
+        },
+        {
+          "text": "Commandant : Erhardt",
+          "list": true
+        },
+        {
+          "text": "Les 9 Généraux : Voss, Darius Vale, Krauss, Stark, Von Müller, Krüger, Harden, Draen, Calder",
+          "list": true
+        },
+        {
+          "text": "Des personnes non militaire, mais travaillant pour l’AXE, comme Vaek",
+          "list": true
+        },
+        {
+          "text": "Les amazones d’élite, transformée pour obéir : Diana, Donna, Hippolyta, Drusilla, Artemis, Cassie",
+          "list": true
+        },
+        {
+          "text": "Les lieutenants comme Marlow et Khrun",
+          "list": true
+        },
+        {
+          "text": "Les soldats et gardes de l’AXE",
+          "list": true
+        },
+        {
+          "text": "Les amazones rendues obéissantes",
+          "list": true
+        }
+      ]
+    },
+    {
+      "name": "Kherasya",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Grande ville située au Nord de l’île de Bana-Mighdall.",
+          "list": false
+        },
+        {
+          "text": "Elle abrite le port de l’île, permettant les échanges avec Themyscira et le monde extérieur, assurant l’indépendance de l’île.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Laboratoire de Recherche",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Complexe construit dans la ville de Thalassyr, à l’Ouest de l’île. Le Général Harden y mène ses recherches et ses expérimentations. Il utilise l’amazonium, arrivant par cargaisons du Nord, pour ses expériences mêlant le métal divin et la technologie qu’il a développée, ainsi que des cobayes amazones.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Laboratoire de Reprogrammation",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Complexe construit dans la Capitale, dirigé par Vaek.",
+          "list": false
+        },
+        {
+          "text": "Il abrite notamment la machine de reprogrammation, qui sert à reprogrammer une amazone.",
+          "list": false
+        },
+        {
+          "text": "Le bâtiment est ultra-moderne, contrastant avec l’architecture globale de la ville.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Mesures imposées par l’AXE aux amazones",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Interdiction stricte de se déplacer seule : chaque amazone est supervisée par un duo soldat homme, qui est son supérieur",
+          "list": true
+        },
+        {
+          "text": "Obligation de garder la tête baissée, constamment, sauf ordre contraire",
+          "list": true
+        },
+        {
+          "text": "Silence obligatoire, sauf ordre contraire",
+          "list": true
+        },
+        {
+          "text": "Bras dans le dos",
+          "list": true
+        },
+        {
+          "text": "Certaines amazones sont utilisées comme amazones de tractions :",
+          "list": false
+        },
+        {
+          "text": "Elles sont penchées en avant, maintenu par un harnais",
+          "list": true
+        },
+        {
+          "text": "Elles ont un cache œil les rendant aveugles",
+          "list": true
+        },
+        {
+          "text": "Elles ont un mors dans la bouche",
+          "list": true
+        },
+        {
+          "text": "Leurs bras sont liés dans le dos.",
+          "list": true
+        },
+        {
+          "text": "Elles n’ont aucune volonté ni identités propres, étant utilisées comme des animaux obéissant, pour tirer les chars. Obéissance totale si elles sont libérées de leurs liens.",
+          "list": true
+        },
+        {
+          "text": "D’autres amazones sont utilisées comme amazones décoratives :",
+          "list": false
+        },
+        {
+          "text": "Elles sont utilisées comme statues vivante, parfois en armure, parfois nue",
+          "list": true
+        },
+        {
+          "text": "Elles restent ainsi sans bouger, pendant des heures, sans volonté",
+          "list": true
+        },
+        {
+          "text": "D’autres sont utilisés comme support pour tenir des objets, ou reposer les pieds",
+          "list": true
+        }
+      ]
+    },
+    {
+      "name": "Midéa",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ville principale du Sud de Themyscira. Elle est la troisième plus grande ville de Themyscira.",
+          "list": false
+        },
+        {
+          "text": "Midéa abrite le Temple de Voss, un ancien temple réhabilité à la gloire de Voss.",
+          "list": false
+        },
+        {
+          "text": "Elle abrite également le Centre d’Alignement.",
+          "list": false
+        },
+        {
+          "text": "Elle possède également son propre port, plus petit que celui de l’Ouest.",
+          "list": false
+        },
+        {
+          "text": "Des statues de Voss, des fresques et des colonnes sont présentes partout.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Mines du Nord",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Les mines s’étendent sous les montagnes glacées de Chalyra.\nCreusées depuis des siècles par les amazones, elles ont été massivement industrialisées après la prise de pouvoir de l’Ordre.",
+          "list": false
+        },
+        {
+          "text": "Les galeries sont profondes, étroites, glaciales.\nL’air y est lourd, saturé de poussière minérale.",
+          "list": false
+        },
+        {
+          "text": "Les mines contiennent principalement de l’amazonium.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Ordre",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Organisation dirigée par le Sovereign, pour imposer le régime patriarcal sur Themyscira et dans le monde.",
+          "list": false
+        },
+        {
+          "text": "L’Ordre possède une branche armée, appelée AXE : Amazon Extradition Entity.",
+          "list": false
+        },
+        {
+          "text": "Un gigantesque complexe est présent dans le monde des hommes, en bord de mer avec son propre port.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Palais Royal",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Palais situé dans la capitale, où vit actuellement Erhardt, dans les quartiers royaux, là où vivait avant Hippolyta.",
+          "list": false
+        },
+        {
+          "text": "L’accès est fortement restreint, une gigantesque muraille entourant les alentours du palais, avec contrôle strict à l’entrée.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Résistance",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Mouvement rebelle dirigé par Cassie et Artemis, pour lutter contre l’Ordre sur Themyscira. Il se divise en 2 branches : le Front Nord et le Front Sud.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Temple de Voss",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ancien temple de la déesse Athéna, réhabilité et transformé en palais personnel par Helena Voss.",
+          "list": false
+        },
+        {
+          "text": "Situé dans la ville de Midéa, il sert aujourd’hui de « Palais Royal » pour Voss.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Thalassyr",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ville principale de l’Ouest, dirigée par le Général Harden.",
+          "list": false
+        },
+        {
+          "text": "Thalassyr est la deuxième plus grande ville de Themyscira.",
+          "list": false
+        },
+        {
+          "text": "Le climat est tropical, avec des palmiers et des plages paradisiaques.\nLa ville arbore des bannières de l’Ordre partout, et des gigantesques statues du Sovereign et d’Erhardt.",
+          "list": false
+        },
+        {
+          "text": "Elle abrite également le Centre de recherche, et le plus grand port de l’île.\nLe port, entièrement militarisé, est le point logistique central de l’île, permettant les échanges avec le monde des Hommes.",
+          "list": false
+        }
+      ]
+    },
+    {
+      "name": "Themyscira",
+      "fields": [],
+      "parts": [
+        {
+          "text": "Ile des amazones, accessible uniquement par bateau.",
+          "list": false
+        },
+        {
+          "text": "L’île se divise en plusieurs zones distinctes ;",
+          "list": false
+        },
+        {
+          "text": "Le Nord :",
+          "list": false
+        },
+        {
+          "text": "Les montagnes enneigées au Nord, avec les mines creusées dans la roche.",
+          "list": true
+        },
+        {
+          "text": "Le Nord est dirigé par le Général Krauss, dans la ville de Chalyra",
+          "list": true
+        },
+        {
+          "text": "Le Nord abrite également le QG de la Résistance du Front Nord, dans une ancienne mine abandonnée réhabilitée",
+          "list": true
+        },
+        {
+          "text": "L’Est :",
+          "list": false
+        },
+        {
+          "text": "Les falaises escarpées à l’Est",
+          "list": true
+        },
+        {
+          "text": "L’Est est dirigé par le Général Calder",
+          "list": true
+        },
+        {
+          "text": "Il abrite également la Grande Prison, creusée à même les falaises",
+          "list": true
+        },
+        {
+          "text": "Le Sud :",
+          "list": false
+        },
+        {
+          "text": "Le désert au Sud",
+          "list": true
+        },
+        {
+          "text": "Le Sud est dirigé par la Générale Voss, dans la ville de Midéa",
+          "list": true
+        },
+        {
+          "text": "Le Sud abrite également le QG de la Résistance du Front Sud, situé au cœur du désert",
+          "list": true
+        },
+        {
+          "text": "L’Ouest :",
+          "list": false
+        },
+        {
+          "text": "Les plages de l’Ouest, avec la ville de Thalassyr et le port principal de l’île",
+          "list": true
+        },
+        {
+          "text": "L’Ouest est dirigé par le Général Harden, dans la ville de Thalassyr",
+          "list": true
+        },
+        {
+          "text": "Bana-Mighdall :",
+          "list": false
+        },
+        {
+          "text": "Ile voisine de Themyscira, au Sud-Est.",
+          "list": true
+        },
+        {
+          "text": "Bana-Mighdall est dirigée par le Général Darius Vale",
+          "list": true
+        },
+        {
+          "text": "La capitale :",
+          "list": false
+        },
+        {
+          "text": "Zone principale de l’île, au centre, abritant le Palais Royal",
+          "list": true
+        },
+        {
+          "text": "La ville Capitale est dirigée par le Commandant Erhardt",
+          "list": true
+        },
+        {
+          "text": "Le reste de l’île est principalement composé de forêts, avec des petits villages, des temples, des grottes, des clairières, des rivières…",
+          "list": false
+        }
+      ]
+    }
+  ]
+}
