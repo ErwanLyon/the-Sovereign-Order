@@ -93,7 +93,7 @@ async function remoteData(path,token){
 }
 function canonical(value){if(Array.isArray(value))return value.map(canonical);if(value&&typeof value==='object')return Object.fromEntries(Object.keys(value).sort().map(k=>[k,canonical(value[k])]));return value}
 function sameData(a,b){return JSON.stringify(canonical(a))===JSON.stringify(canonical(b))}
-async function load(k){const spec=specs[k];const {data}=await remoteData(spec.file,$('token').value.trim());if(!Array.isArray(data[spec.key]))throw Error('Structure inconnue : '+spec.file);data[spec.key].forEach(x=>safeRecord(x,k));collections[k]=data[spec.key];original[k]=JSON.stringify(data);pending[k]=[]}
+async function load(k,fromGithub=false){const spec=specs[k];let data;if(fromGithub){({data}=await remoteData(spec.file,$('token').value.trim()));}else{const response=await fetch(spec.file+'?ts='+Date.now(),{cache:'no-store'});if(!response.ok)throw Error('Lecture des fiches : HTTP '+response.status);data=await response.json();}if(!Array.isArray(data[spec.key]))throw Error('Structure inconnue : '+spec.file);data[spec.key].forEach(x=>safeRecord(x,k));collections[k]=data[spec.key];original[k]=JSON.stringify(data);pending[k]=[]}
 async function optimizeImage(file){
  if(file.size<=8*1024*1024)return file;
  if(file.type==='image/gif')throw Error('GIF trop volumineux (8 Mo maximum).');
@@ -115,8 +115,8 @@ $('addPart').onclick=()=>{entries()[selected].parts.push({text:'',list:false});r
 $('newImage').onchange=async e=>{const item=entries()[selected];if(!item)return;let added=0;for(const inputFile of e.target.files){if(!['image/png','image/jpeg','image/webp','image/gif'].includes(inputFile.type)){feedback('Format non accepté : '+inputFile.name);continue}
  try{const file=await optimizeImage(inputFile);const path=uniqueImagePath(file.name);item.images.push(path);pending.characters.push({path,file});added++}catch(err){feedback(err.message)}}
  e.target.value='';renderRows();if(added)feedback(added+' image(s) ajoutée(s), prêtes à publier (optimisation automatique si nécessaire).')};
-$('sync').onclick=async()=>{if(Object.keys(original).some(k=>!sameData(cloneData(k),JSON.parse(original[k]))||pending[k]?.length)){message('Modifications locales non publiées : synchronisation annulée pour ne rien perdre.',true);return}
- try{message('Synchronisation depuis le dépôt GitHub…');await Promise.all(Object.keys(specs).map(load));selected=0;render();message('Fiches synchronisées depuis GitHub.')}catch(e){message('Synchronisation impossible : '+e.message,true)}};
+$('sync').onclick=async()=>{if(!$('token').value.trim()){message('Saisis d’abord ton jeton GitHub pour synchroniser.',true);return}saveCurrent();if(Object.keys(original).some(k=>!sameData(cloneData(k),JSON.parse(original[k]))||pending[k]?.length)){message('Modifications locales non publiées : synchronisation annulée pour ne rien perdre.',true);return}
+ try{message('Synchronisation depuis le dépôt GitHub…');await Promise.all(Object.keys(specs).map(k=>load(k,true)));selected=0;render();message('Fiches synchronisées depuis GitHub.')}catch(e){message('Synchronisation impossible : '+e.message,true)}};
 $('clearToken').onclick=()=>{$('token').value='';message('Jeton effacé de cet onglet.')};
 $('export').onclick=()=>{saveCurrent();const data=cloneData(kind);const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=specs[kind].file.split('/').pop();a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
 $('publish').onclick=async()=>{
@@ -142,5 +142,5 @@ $('publish').onclick=async()=>{
  finally{busy=false;$('publish').disabled=false}
 };
 window.addEventListener('beforeunload',e=>{if(Object.keys(original).some(k=>JSON.stringify(cloneData(k))!==original[k])){e.preventDefault();e.returnValue=''}});
-Promise.all(Object.keys(specs).map(load)).then(()=>{render();message('Encyclopédies chargées. Les changements ne seront publics qu’après publication.')}).catch(e=>{message('Impossible de charger les encyclopédies : '+e.message,true);$('publish').disabled=true});
+Promise.all(Object.keys(specs).map(k=>load(k,false))).then(()=>{render();message('Encyclopédies chargées depuis le site. Avant de modifier une fiche, saisis ton jeton et clique sur « Synchroniser depuis GitHub » pour récupérer la version la plus récente.')}).catch(e=>{message('Impossible de charger les encyclopédies : '+e.message,true);$('publish').disabled=true});
 </script></body></html>
