@@ -1,0 +1,125 @@
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TSO — Encyclopédies V21</title>
+<style>
+:root{font-family:system-ui;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#151314;color:#f3e7d4}main{max-width:1120px;margin:auto;padding:22px}h1,h2,h3{font-family:Georgia;color:#d6b579}p{color:#c8baa6;line-height:1.5}a{color:#d6b579}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#312a23;border:1px solid #a18459;border-radius:8px;color:#f5e8d2;padding:10px 13px}button:hover{background:#51402c}button:disabled{opacity:.5}input,textarea,select{width:100%;background:#211e1d;border:1px solid #756044;border-radius:8px;padding:10px;color:#fff3e3}label{display:block;margin:12px 0 5px;color:#e6d3b2}.panel{border:1px solid #68543b;border-radius:12px;padding:18px;background:#201c1b}.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:18px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}.selected{background:#73512e}.entry{width:100%;text-align:left;margin:5px 0}.small{font-size:13px}.notice{white-space:pre-wrap}.good{color:#b8d7a8}.bad{color:#ffba9e}.pair{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin:8px 0}.thumb{max-width:150px;max-height:110px;object-fit:contain;vertical-align:middle}.imgline{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}.imgline input{flex:1;min-width:180px}@media(max-width:700px){.layout{grid-template-columns:1fr}main{padding:12px}}
+</style></head><body><main>
+<header><h1>Administration — Encyclopédies</h1><p>V21 · Personnages, artefacts et lexique · <a href="admin.html">Éditeur de scènes</a> · <a href="index.html">Ouvrir le livre</a></p></header>
+<section class="panel"><h2>Publication GitHub</h2><p class="small">Les modifications sont locales jusqu'à « Publier ». Le jeton reste dans cet onglet, jamais dans les fichiers publiés. Pour les images, seuls les fichiers sélectionnés seront envoyés au dépôt lors de la publication.</p>
+<label for="token">Jeton GitHub (Contents : Read and write, dépôt uniquement)</label><input id="token" type="password" autocomplete="off" placeholder="github_pat_…">
+<div class="bar"><button id="publish">Publier cette encyclopédie</button><button id="export">Exporter le JSON</button><button id="clearToken">Effacer le jeton</button></div><p class="small notice" id="status" role="status">Chargement…</p></section>
+<div class="bar"><button data-kind="characters" class="kind selected">Personnages</button><button data-kind="artifacts" class="kind">Artefacts</button><button data-kind="lexicon" class="kind">Lexique</button></div>
+<div class="layout"><aside class="panel"><h2 id="listTitle">Personnages</h2><input id="search" placeholder="Rechercher…"><div id="list"></div><button id="add">+ Ajouter une fiche</button></aside>
+<section class="panel"><h2 id="formTitle">Fiche</h2><label>Nom</label><input id="name" placeholder="Nom de la fiche">
+<h3>Champs de la fiche</h3><p class="small">Chaque champ possède un intitulé et une valeur. Ils s'affichent dans cet ordre dans le livre.</p><div id="fields"></div><button id="addField">+ Ajouter un champ</button>
+<div id="partsSection"><h3>Paragraphes descriptifs</h3><p class="small">Pour les artefacts et le lexique. Chaque ligne est un paragraphe ; la case « liste » conserve sa présentation particulière.</p><div id="parts"></div><button id="addPart">+ Ajouter un paragraphe</button></div>
+<div id="imagesSection"><h3>Illustrations</h3><p class="small">Ajoute une image depuis ton appareil ou conserve une adresse existante. Les nouvelles images sont envoyées vers <code>images/encyclopedie/</code> lors de la publication. Évite les fichiers trop volumineux.</p><div id="images"></div><label for="newImage">Ajouter des photos</label><input id="newImage" type="file" accept="image/png,image/jpeg,image/webp,image/gif" multiple></div>
+<div class="bar"><button id="save">Enregistrer la fiche</button><button id="remove">Supprimer la fiche</button></div><p class="small notice" id="feedback"></p>
+</section></div></main>
+<script>
+const $=id=>document.getElementById(id);
+const GH='https://api.github.com/repos/erwanlyon/the-Sovereign-Order/contents/';
+const BRANCH='main';
+const specs={characters:{label:'Personnages',file:'data/characters.json',key:'characters'},artifacts:{label:'Artefacts',file:'data/artifacts.json',key:'entries'},lexicon:{label:'Lexique',file:'data/lexicon.json',key:'entries'}};
+let kind='characters',selected=0,collections={},original={},pending={},busy=false;
+function key(){return specs[kind].key}
+function entries(){return collections[kind]||[]}
+function message(t,bad=false){$('status').textContent=t;$('status').className='small notice '+(bad?'bad':'good')}
+function feedback(t){$('feedback').textContent=t}
+function cleanName(s){return String(s||'').trim()}
+function empty(){return kind==='characters'?{name:'',fields:[],images:[]}:{name:'',fields:[],parts:[]}}
+function safeRecord(item,k){
+ if(!item||typeof item.name!=='string'||!Array.isArray(item.fields)||!item.fields.every(x=>Array.isArray(x)&&x.length>=2))throw Error('Structure de fiche inattendue dans '+specs[k].file);
+ if(k==='characters'){if(!Array.isArray(item.images)||!item.images.every(x=>typeof x==='string'))throw Error('Images invalides');}
+ else if(!Array.isArray(item.parts)||!item.parts.every(x=>x&&typeof x.text==='string'))throw Error('Paragraphes invalides');
+ return item;
+}
+function setKind(k){if(k===kind)return;saveCurrent();kind=k;selected=0;document.querySelectorAll('.kind').forEach(b=>b.classList.toggle('selected',b.dataset.kind===k));render()}
+function makeInput(value,placeholder,onChange){const inp=document.createElement('input');inp.value=value||'';inp.placeholder=placeholder;inp.addEventListener('input',e=>onChange(e.target.value));return inp}
+function renderRows(){
+ const item=entries()[selected];if(!item)return;
+ $('fields').replaceChildren();
+ item.fields.forEach((pair,i)=>{
+  const div=document.createElement('div');div.className='pair';
+  div.append(makeInput(pair[0],'Intitulé',v=>pair[0]=v),makeInput(pair[1],'Valeur',v=>pair[1]=v));
+  const remove=document.createElement('button');remove.textContent='×';remove.title='Supprimer ce champ';remove.onclick=()=>{item.fields.splice(i,1);renderRows()};div.append(remove);$('fields').append(div);
+ });
+ $('parts').replaceChildren();
+ if(kind!=='characters')item.parts.forEach((part,i)=>{
+  const div=document.createElement('div');div.className='imgline';
+  const ta=document.createElement('textarea');ta.rows=2;ta.value=part.text;ta.oninput=()=>part.text=ta.value;ta.style.flex='1';
+  const check=document.createElement('input');check.type='checkbox';check.checked=!!part.list;check.style.width='auto';check.onchange=()=>part.list=check.checked;
+  const lbl=document.createElement('label');lbl.textContent='Liste';lbl.append(check);
+  const remove=document.createElement('button');remove.textContent='×';remove.onclick=()=>{item.parts.splice(i,1);renderRows()};
+  div.append(ta,lbl,remove);$('parts').append(div);
+ });
+ $('images').replaceChildren();
+ if(kind==='characters')item.images.forEach((src,i)=>{
+  const div=document.createElement('div');div.className='imgline';
+  const inp=makeInput(src,'Chemin image',v=>{item.images[i]=v;renderList()});div.append(inp);
+  if(src){const im=document.createElement('img');im.className='thumb';im.src=src;im.onerror=()=>im.style.display='none';div.append(im)}
+  const remove=document.createElement('button');remove.textContent='×';remove.onclick=()=>{item.images.splice(i,1);renderRows()};div.append(remove);$('images').append(div);
+ });
+}
+function renderList(){
+ $('list').replaceChildren();const q=$('search').value.toLocaleLowerCase('fr');
+ entries().forEach((item,i)=>{if(!item.name.toLocaleLowerCase('fr').includes(q))return;
+  const b=document.createElement('button');b.className='entry'+(selected===i?' selected':'');b.textContent=item.name||'(Sans nom)';b.onclick=()=>{saveCurrent();selected=i;render()};$('list').append(b)});
+}
+function render(){
+ $('listTitle').textContent=specs[kind].label+' ('+entries().length+')';
+ $('partsSection').hidden=kind==='characters';$('imagesSection').hidden=kind!=='characters';
+ $('search').value='';renderList();
+ const item=entries()[selected];$('formTitle').textContent=item?'Modifier la fiche':'Aucune fiche';
+ $('name').value=item?.name||'';$('name').disabled=!item;
+ for(const id of ['addField','addPart','newImage','save','remove'])$(id).disabled=!item;
+ $('fields').replaceChildren();$('parts').replaceChildren();$('images').replaceChildren();
+ if(item)renderRows();feedback('');
+}
+function saveCurrent(){const item=entries()[selected];if(item)item.name=$('name').value.trim()}
+function bytesToB64(bytes){let str='';for(let i=0;i<bytes.length;i+=8192)str+=String.fromCharCode(...bytes.subarray(i,i+8192));return btoa(str)}
+function textB64(t){return bytesToB64(new TextEncoder().encode(t))}
+function decode64(t){return new TextDecoder().decode(Uint8Array.from(atob(t.replace(/\s/g,'')),x=>x.charCodeAt(0)))}
+function headers(token){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'}}
+async function apiGet(path,token){const r=await fetch(GH+path+'?ref='+BRANCH,{headers:token?headers(token):{},cache:'no-store'});if(r.status===404)return null;if(!r.ok)throw Error('GitHub HTTP '+r.status+' ('+path+')');return r.json()}
+async function apiPut(path,content,sha,token,msg){const r=await fetch(GH+path,{method:'PUT',headers:{...headers(token),'Content-Type':'application/json'},body:JSON.stringify({message:msg,content,sha,branch:BRANCH})});if(!r.ok){let detail='';try{detail=(await r.json()).message}catch{}throw Error('GitHub HTTP '+r.status+' : '+detail)}return r.json()}
+async function load(k){const spec=specs[k];const r=await fetch(spec.file+'?ts='+Date.now(),{cache:'no-store'});if(!r.ok)throw Error('Chargement '+spec.file+' : HTTP '+r.status);const data=await r.json();if(!Array.isArray(data[spec.key]))throw Error('Structure inconnue : '+spec.file);data[spec.key].forEach(x=>safeRecord(x,k));collections[k]=data[spec.key];original[k]=JSON.stringify(data);pending[k]=[]}
+function cloneData(k){const data=JSON.parse(original[k]);data[specs[k].key]=collections[k];return data}
+function uniqueImagePath(name){const ext=name.toLowerCase().split('.').pop();const suffix=['png','jpg','jpeg','webp','gif'].includes(ext)?ext:'png';const stem=name.replace(/\.[^.]*$/,'').normalize('NFKD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9_-]+/g,'-').slice(0,40)||'image';return 'images/encyclopedie/'+stem+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)+'.'+suffix}
+document.querySelectorAll('.kind').forEach(b=>b.onclick=()=>setKind(b.dataset.kind));
+$('search').oninput=renderList;$('name').oninput=()=>{const item=entries()[selected];if(item){item.name=$('name').value;renderList()}};
+$('add').onclick=()=>{saveCurrent();entries().push(empty());selected=entries().length-1;render()};
+$('save').onclick=()=>{saveCurrent();feedback('Fiche enregistrée localement. Utilise « Publier cette encyclopédie » pour mettre à jour le site.')};
+$('remove').onclick=()=>{if(!entries().length||!confirm('Supprimer cette fiche ?'))return;entries().splice(selected,1);selected=Math.max(0,Math.min(selected,entries().length-1));render()};
+$('addField').onclick=()=>{entries()[selected].fields.push(['','']);renderRows()};
+$('addPart').onclick=()=>{entries()[selected].parts.push({text:'',list:false});renderRows()};
+$('newImage').onchange=async e=>{const item=entries()[selected];if(!item)return;for(const file of e.target.files){if(!['image/png','image/jpeg','image/webp','image/gif'].includes(file.type)){feedback('Format non accepté : '+file.name);continue}if(file.size>8*1024*1024){feedback('Image trop volumineuse (maximum 8 Mo) : '+file.name);continue}
+ const path=uniqueImagePath(file.name);item.images.push(path);pending.characters.push({path,file});}
+ e.target.value='';renderRows();feedback('Images ajoutées à la fiche. Elles seront envoyées sur GitHub lors de la publication.')};
+$('clearToken').onclick=()=>{$('token').value='';message('Jeton effacé de cet onglet.')};
+$('export').onclick=()=>{saveCurrent();const data=cloneData(kind);const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=specs[kind].file.split('/').pop();a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+$('publish').onclick=async()=>{
+ if(busy)return;saveCurrent();const token=$('token').value.trim();if(!token){message('Saisis ton jeton GitHub.',true);return}
+ const spec=specs[kind],data=cloneData(kind),newFiles=kind==='characters'?pending.characters:[];
+ if(data[spec.key].some(x=>!cleanName(x.name))){message('Toutes les fiches doivent avoir un nom.',true);return}
+ if(!confirm('Publier '+data[spec.key].length+' fiches de « '+spec.label+' » sur GitHub'+(newFiles.length?' et '+newFiles.length+' image(s)':'')+' ?'))return;
+ busy=true;$('publish').disabled=true;
+ try{
+  message('Vérification des données GitHub…');
+  const remote=await apiGet(spec.file,token);
+  if(!remote?.sha||!remote.content)throw Error('Fichier distant introuvable ou illisible.');
+  const actual=JSON.parse(decode64(remote.content));
+  if(JSON.stringify(actual)!==original[kind])throw Error('Les fiches ont changé sur GitHub depuis leur chargement. Recharge la page pour éviter un écrasement.');
+  for(const img of newFiles){
+   message('Envoi image : '+img.file.name);
+   const bytes=new Uint8Array(await img.file.arrayBuffer());
+   await apiPut(img.path,bytesToB64(bytes),undefined,token,'Ajout illustration TSO : '+img.file.name);
+  }
+  message('Publication des fiches…');
+  await apiPut(spec.file,textB64(JSON.stringify(data,null,2)),remote.sha,token,'Mise à jour encyclopédie TSO : '+spec.label);
+  original[kind]=JSON.stringify(data);pending[kind]=[];
+  message('Publication GitHub réussie. Actualise le livre après le déploiement GitHub Pages.');
+ }catch(err){message('Publication interrompue : '+err.message+'. Les images déjà envoyées peuvent rester dans le dépôt.',true)}
+ finally{busy=false;$('publish').disabled=false}
+};
+window.addEventListener('beforeunload',e=>{if(Object.keys(original).some(k=>JSON.stringify(cloneData(k))!==original[k])){e.preventDefault();e.returnValue=''}});
+Promise.all(Object.keys(specs).map(load)).then(()=>{render();message('Encyclopédies chargées. Les changements ne seront publics qu’après publication.')}).catch(e=>{message('Impossible de charger les encyclopédies : '+e.message,true);$('publish').disabled=true});
+</script></body></html>
