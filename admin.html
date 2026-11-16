@@ -1,4 +1,4 @@
-<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TSO — Éditeur V18.5</title><style>:root{font-family:system-ui;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#151314;color:#f3e7d4}.wrap{max-width:1000px;margin:auto;padding:25px}h1,h2{font-family:Georgia;color:#d6b579}p{line-height:1.5;color:#c8baa6}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#312a23;border:1px solid #a18459;border-radius:8px;color:#f5e8d2;padding:10px 15px}button:hover{background:#51402c}button:disabled{opacity:.4}input,textarea,select{width:100%;background:#211e1d;border:1px solid #756044;color:#fff3e3;border-radius:8px;padding:11px}.rich-editor{min-height:290px;line-height:1.42;overflow:auto;outline:none;white-space:normal}.rich-editor p,.rich-editor div{margin:0;padding:0;line-height:inherit;min-height:0}.rich-editor{white-space:normal}.rich-editor p:empty:before{content:"\00a0"}.rich-editor p+p{margin-top:0}.rich-editor p{min-height:0;line-height:1.35}.rich-editor p:has(>br:only-child){height:.95em;min-height:0;line-height:.95em}.rich-editor p:has(>br:only-child) br{display:none}.rich-editor br{line-height:inherit}.rich-editor:focus{border-color:#d6b579}.toolbar{display:flex;gap:8px;margin:8px 0}.toolbar button{min-width:48px;padding:7px 12px}.rich-editor:empty:before{content:attr(data-placeholder);color:#958675}label{display:block;margin:12px 0 5px;color:#e6d3b2}.grid{display:grid;grid-template-columns:1fr 2fr;gap:20px}.panel{border:1px solid #68543b;border-radius:13px;padding:20px;background:#201c1b}.scene{display:block;width:100%;text-align:left;margin:7px 0}.active{background:#6c4d2d}header{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.hint{font-size:13px}.ok{color:#b8d7a8}.warn{color:#ffd29d}@media(max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:12px}}</style></head><body><div class="wrap"><header><div><h1>Administration — The Sovereign Order</h1><p>V18.5 · Éditeur Word et publication GitHub</p></div><a href="index.html" style="color:#d6b579">Ouvrir le livre</a></header><div class="panel"><strong>Publication : GitHub (V18)</strong><p>Tu peux toujours exporter <code>scenes.json</code>. Pour publier directement, utilise un jeton GitHub à accès limité, créé sur ton compte avec le droit <strong>Contents: Read and write</strong> pour le dépôt <code>erwanlyon/the-Sovereign-Order</code> uniquement. Le jeton reste en mémoire dans cet onglet : il n’est pas enregistré dans le navigateur ni envoyé au site public. <strong>Ne le partage jamais et ne l’ajoute pas à un fichier du dépôt.</strong></p><label for="ghToken">Jeton GitHub (fine-grained personal access token)</label><input id="ghToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><div class="actions"><button id="publish" type="button">Publier les scènes sur GitHub</button><button id="forgetToken" type="button">Effacer le jeton</button></div><p id="publishStatus" class="hint" role="status" aria-live="polite">Publication inactive tant qu’aucun jeton n’est fourni.</p><p class="hint">L’adresse de cet éditeur est publique ; seul ton jeton donne le droit de publier. Utilise-le uniquement sur ton site GitHub Pages officiel, depuis un appareil de confiance. Après publication, GitHub Pages peut prendre quelques minutes pour afficher les changements.</p><label for="loadFile">Charger un fichier scenes.json (facultatif, pour reprendre un travail)</label><input id="loadFile" type="file" accept=".json,application/json"><p id="status" class="hint">Chargement des scènes actuelles…</p></div><div class="grid" style="margin-top:18px"><aside class="panel"><h2>Scènes <span id="count"></span></h2><div id="sceneList"></div><button id="add">+ Ajouter une scène</button></aside><main class="panel"><h2 id="editorTitle">Édition</h2><label for="title">Titre de la scène</label><input id="title"><label for="place">Lieu</label><input id="place"><label for="time">Moment</label><input id="time"><label for="content">Texte (copié depuis Word)</label><div class="toolbar" role="toolbar" aria-label="Mise en forme"><button type="button" id="bold" title="Gras (Ctrl+B)"><b>G</b></button><button type="button" id="italic" title="Italique (Ctrl+I)"><i>I</i></button><button type="button" id="clear" title="Retirer le gras et l’italique">Effacer le style</button></div><div id="content" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Colle ici le texte de la scène depuis Word."></div><p class="hint">Une ligne vide dans Word reste une ligne vide ici ; aucun espacement automatique n’est ajouté. Le gras et l’italique sont conservés lorsque Word transmet ces styles. Utilise les boutons G et I pour modifier une sélection. Les scènes sont numérotées automatiquement (5 par chapitre).</p><div class="actions"><button id="save">Enregistrer la scène</button><button id="remove">Supprimer la scène</button><button id="export">Exporter scenes.json</button></div><p id="feedback" aria-live="polite"></p></main></div></div><script>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>TSO — Éditeur V18.6</title><style>:root{font-family:system-ui;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#151314;color:#f3e7d4}.wrap{max-width:1000px;margin:auto;padding:25px}h1,h2{font-family:Georgia;color:#d6b579}p{line-height:1.5;color:#c8baa6}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#312a23;border:1px solid #a18459;border-radius:8px;color:#f5e8d2;padding:10px 15px}button:hover{background:#51402c}button:disabled{opacity:.4}input,textarea,select{width:100%;background:#211e1d;border:1px solid #756044;color:#fff3e3;border-radius:8px;padding:11px}.rich-editor{min-height:290px;line-height:1.08;overflow:auto;outline:none;white-space:normal}.rich-editor p,.rich-editor div{margin:0 0 8pt;padding:0;line-height:1.08;min-height:0}.rich-editor p:last-child{margin-bottom:0}.rich-editor br{line-height:inherit}.rich-editor:focus{border-color:#d6b579}.toolbar{display:flex;gap:8px;margin:8px 0}.toolbar button{min-width:48px;padding:7px 12px}.rich-editor:empty:before{content:attr(data-placeholder);color:#958675}label{display:block;margin:12px 0 5px;color:#e6d3b2}.grid{display:grid;grid-template-columns:1fr 2fr;gap:20px}.panel{border:1px solid #68543b;border-radius:13px;padding:20px;background:#201c1b}.scene{display:block;width:100%;text-align:left;margin:7px 0}.active{background:#6c4d2d}header{display:flex;justify-content:space-between;gap:15px;align-items:center;flex-wrap:wrap}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}.hint{font-size:13px}.ok{color:#b8d7a8}.warn{color:#ffd29d}@media(max-width:700px){.grid{grid-template-columns:1fr}.wrap{padding:12px}}</style></head><body><div class="wrap"><header><div><h1>Administration — The Sovereign Order</h1><p>V18.6 · Éditeur Word et publication GitHub</p></div><a href="index.html" style="color:#d6b579">Ouvrir le livre</a></header><div class="panel"><strong>Publication : GitHub (V18)</strong><p>Tu peux toujours exporter <code>scenes.json</code>. Pour publier directement, utilise un jeton GitHub à accès limité, créé sur ton compte avec le droit <strong>Contents: Read and write</strong> pour le dépôt <code>erwanlyon/the-Sovereign-Order</code> uniquement. Le jeton reste en mémoire dans cet onglet : il n’est pas enregistré dans le navigateur ni envoyé au site public. <strong>Ne le partage jamais et ne l’ajoute pas à un fichier du dépôt.</strong></p><label for="ghToken">Jeton GitHub (fine-grained personal access token)</label><input id="ghToken" type="password" autocomplete="off" spellcheck="false" placeholder="github_pat_…"><div class="actions"><button id="publish" type="button">Publier les scènes sur GitHub</button><button id="forgetToken" type="button">Effacer le jeton</button></div><p id="publishStatus" class="hint" role="status" aria-live="polite">Publication inactive tant qu’aucun jeton n’est fourni.</p><p class="hint">L’adresse de cet éditeur est publique ; seul ton jeton donne le droit de publier. Utilise-le uniquement sur ton site GitHub Pages officiel, depuis un appareil de confiance. Après publication, GitHub Pages peut prendre quelques minutes pour afficher les changements.</p><label for="loadFile">Charger un fichier scenes.json (facultatif, pour reprendre un travail)</label><input id="loadFile" type="file" accept=".json,application/json"><p id="status" class="hint">Chargement des scènes actuelles…</p></div><div class="grid" style="margin-top:18px"><aside class="panel"><h2>Scènes <span id="count"></span></h2><div id="sceneList"></div><button id="add">+ Ajouter une scène</button></aside><main class="panel"><h2 id="editorTitle">Édition</h2><label for="title">Titre de la scène</label><input id="title"><label for="place">Lieu</label><input id="place"><label for="time">Moment</label><input id="time"><label for="content">Texte (copié depuis Word)</label><div class="toolbar" role="toolbar" aria-label="Mise en forme"><button type="button" id="bold" title="Gras (Ctrl+B)"><b>G</b></button><button type="button" id="italic" title="Italique (Ctrl+I)"><i>I</i></button><button type="button" id="clear" title="Retirer le gras et l’italique">Effacer le style</button></div><div id="content" class="rich-editor" contenteditable="true" role="textbox" aria-multiline="true" data-placeholder="Colle ici le texte de la scène depuis Word."></div><p class="hint">Les paragraphes suivent les réglages Word : 0 pt avant, 8 pt après et interligne 1,08. Le gras et l’italique sont conservés lorsque Word transmet ces styles. Utilise les boutons G et I pour modifier une sélection. Les scènes sont numérotées automatiquement (5 par chapitre).</p><div class="actions"><button id="save">Enregistrer la scène</button><button id="remove">Supprimer la scène</button><button id="export">Exporter scenes.json</button></div><p id="feedback" aria-live="polite"></p></main></div></div><script>
 let scenes=[],selected=0,dirty=false,baseline=null,publishing=false;
 const $=id=>document.getElementById(id);
 function status(t){$('status').textContent=t}
@@ -65,45 +65,54 @@ function decodedText(markup){const el=document.createElement('div');el.innerHTML
 function canon(s){return s.replace(/\u00a0/g,' ').replace(/\s+/g,' ').trim()}
 // Reconstitue le gras/italique par correspondance de mots, sans faire confiance
 // aux retours de ligne du HTML Word (qui peuvent être purement visuels).
-function restoreWordStyles(htmlBlocks,plainBlocks){
- const container=document.createElement('div');
- container.innerHTML=htmlBlocks.map(x=>'<div>'+x+'</div>').join(' ');
- const chars=[],styles=[];
- function visit(n,b=false,i=false){
-   if(n.nodeType===3){
-     for(const c of n.nodeValue.replace(/\u00a0/g,' ')){chars.push(c);styles.push({b,i});}
-     return;
-   }
-   if(n.nodeType!==1)return;
-   const tag=n.tagName.toLowerCase();
-   const bb=b||tag==='strong'||tag==='b';
-   const ii=i||tag==='em'||tag==='i';
-   for(const child of n.childNodes)visit(child,bb,ii);
+function restoreWordStyles(rawHtml,plainBlocks){
+ const root=document.createElement('div');root.innerHTML=wordClipboardHtml(rawHtml);
+ // Word peut stocker les styles dans des classes CSS (MsoNormal, etc.).
+ const cssRules=[];
+ for(const style of root.querySelectorAll('style')){
+  const txt=style.textContent;
+  for(const m of txt.matchAll(/([^{}]+)\{([^{}]*)\}/g)){
+   const selectors=m[1].split(',').map(x=>x.trim()).filter(x=>/^\.?[\w.-]+$/.test(x));
+   cssRules.push({selectors,css:m[2]});
+  }
+  style.remove();
  }
- for(const child of container.childNodes)visit(child);
- const source=chars.join('');
- const tokens=[];
- const re=/\S+/g;let m;
- while((m=re.exec(source))){
-   let b=false,i=false;
-   for(let k=m.index;k<m.index+m[0].length;k++){b=b||styles[k].b;i=i||styles[k].i;}
-   tokens.push({word:m[0],b,i});
+ const tokens=[];let text='';let flags=[];
+ function walk(n,b=false,i=false){
+  if(n.nodeType===3){for(const c of n.nodeValue.replace(/\u00a0/g,' ')){text+=c;flags.push({b,i});}return;}
+  if(n.nodeType!==1)return;
+  const tag=n.tagName.toLowerCase();
+  if(['style','script','meta','head','xml'].includes(tag))return;
+  let css=n.getAttribute('style')||'';
+  for(const rule of cssRules)if(rule.selectors.some(sel=>sel.startsWith('.')?n.classList.contains(sel.slice(1)):tag===sel.toLowerCase()))css+=';'+rule.css;
+  const bb=b||tag==='strong'||tag==='b'||/font-weight\s*:\s*(bold|[6-9]00)/i.test(css);
+  const ii=i||tag==='em'||tag==='i'||/(?:font-style|mso-bidi-font-style)\s*:\s*italic/i.test(css);
+  if(tag==='br'){text+=' ';flags.push({b:bb,i:ii});return;}
+  if(['p','div','li','h1','h2','h3'].includes(tag)&&text&&!/\s$/.test(text)){text+=' ';flags.push({b,i});}
+  for(const child of n.childNodes)walk(child,bb,ii);
+  if(['p','div','li','h1','h2','h3'].includes(tag)){text+=' ';flags.push({b,i});}
  }
- const plainTokens=plainBlocks.join(' ').match(/\S+/g)||[];
- const norm=w=>w.replace(/\u00a0/g,' ').normalize('NFC');
- if(tokens.length!==plainTokens.length||tokens.some((t,k)=>norm(t.word)!==norm(plainTokens[k])))return null;
+ for(const child of root.childNodes)walk(child);
+ const regex=/\S+/g;let m;
+ while((m=regex.exec(text))){let b=false,i=false;for(let k=m.index;k<m.index+m[0].length;k++){b ||=flags[k].b;i ||=flags[k].i;}tokens.push({word:m[0],b,i});}
+ const target=plainBlocks.join(' ').match(/\S+/g)||[];
+ const norm=w=>w.normalize('NFC').replace(/[\u200b\u00ad]/g,'');
+ // Aligner les mots même si Word a inséré des fragments invisibles.
+ let ti=0,matched=0;const selected=[];
+ for(const word of target){
+  while(ti<tokens.length&&norm(tokens[ti].word)!==norm(word)&&ti-matched<8)ti++;
+  if(ti<tokens.length&&norm(tokens[ti].word)===norm(word)){selected.push(tokens[ti++]);matched=ti;}
+  else selected.push({word,b:false,i:false});
+ }
+ if(!selected.some(x=>x.b||x.i))return null;
  let cursor=0;
- return plainBlocks.map(block=>{
-   const pieces=block.split(/(\s+)/);
-   return pieces.map(piece=>{
-     if(!piece||/^\s+$/.test(piece))return esc(piece);
-     const t=tokens[cursor++];
-     let value=esc(piece);
-     if(t.i)value='<em>'+value+'</em>';
-     if(t.b)value='<strong>'+value+'</strong>';
-     return value;
-   }).join('');
- });
+ return plainBlocks.map(block=>block.split(/(\s+)/).map(piece=>{
+  if(!piece||/^\s+$/.test(piece))return esc(piece);
+  const t=selected[cursor++];let val=esc(piece);
+  if(t.i)val='<em>'+val+'</em>';
+  if(t.b)val='<strong>'+val+'</strong>';
+  return val;
+ }).join(''));
 }
 $('content').addEventListener('paste',e=>{
  const html=e.clipboardData.getData('text/html');
@@ -117,15 +126,17 @@ $('content').addEventListener('paste',e=>{
  const plainBlocks=[];
  const normalizedPlain=plain.replace(/\r\n?/g,'\n').replace(/\u000b/g,'\n');
  const lines=normalizedPlain.split('\n');
- let group=[];
+ let group=[];let lastWasBlank=false;
  function flushGroup(){
    if(group.length){plainBlocks.push(group.map(x=>x.trim()).join(' '));group=[];}
  }
  for(const line of lines){
    if(line.trim()===''){
      flushGroup();
-     plainBlocks.push('');
-   }else group.push(line);
+     // Une ligne vide sépare les paragraphes, sans créer de paragraphe vide.
+     if(lastWasBlank)plainBlocks.push('');
+     lastWasBlank=true;
+   }else {group.push(line);lastWasBlank=false;}
  }
  flushGroup();
  // Retirer les vides de fin créés par le presse-papiers.
@@ -134,7 +145,7 @@ $('content').addEventListener('paste',e=>{
    const parsed=normalizeHtml(wordClipboardHtml(html)).filter(p=>!/^(?:\s)*(Version:\s*\d|StartHTML:|EndHTML:|StartFragment:|EndFragment:|SourceURL:)/i.test(p.replace(/<[^>]*>/g,'')));
    // La version texte est la référence pour les vrais paragraphes ; si les deux
    // formats concordent, les styles gras/italique sont préservés.
-   const aligned=plain?restoreWordStyles(parsed,plainBlocks):null;
+   const aligned=plain?restoreWordStyles(html,plainBlocks):null;
    if(aligned)safe=aligned;
    else if(plain){
      // Certains exports Word encodent des retours de ligne d'affichage jusque
