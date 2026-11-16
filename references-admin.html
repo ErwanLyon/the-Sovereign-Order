@@ -2,7 +2,7 @@
 <style>
 :root{font-family:system-ui;color-scheme:dark}*{box-sizing:border-box}body{margin:0;background:#151314;color:#f3e7d4}main{max-width:1120px;margin:auto;padding:22px}h1,h2,h3{font-family:Georgia;color:#d6b579}p{color:#c8baa6;line-height:1.5}a{color:#d6b579}button,input,textarea,select{font:inherit}button{cursor:pointer;background:#312a23;border:1px solid #a18459;border-radius:8px;color:#f5e8d2;padding:10px 13px}button:hover{background:#51402c}button:disabled{opacity:.5}input,textarea,select{width:100%;background:#211e1d;border:1px solid #756044;border-radius:8px;padding:10px;color:#fff3e3}label{display:block;margin:12px 0 5px;color:#e6d3b2}.panel{border:1px solid #68543b;border-radius:12px;padding:18px;background:#201c1b}.layout{display:grid;grid-template-columns:290px minmax(0,1fr);gap:18px}.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:14px 0}.selected{background:#73512e}.entry{width:100%;text-align:left;margin:5px 0}.small{font-size:13px}.notice{white-space:pre-wrap}.good{color:#b8d7a8}.bad{color:#ffba9e}.pair{display:grid;grid-template-columns:1fr 2fr;gap:8px;margin:8px 0}.thumb{max-width:150px;max-height:110px;object-fit:contain;vertical-align:middle}.imgline{display:flex;gap:10px;align-items:center;margin:8px 0;flex-wrap:wrap}.imgline input{flex:1;min-width:180px}@media(max-width:700px){.layout{grid-template-columns:1fr}main{padding:12px}}
 </style></head><body><main>
-<header><h1>Administration — Encyclopédies</h1><p>V21 · Personnages, artefacts et lexique · <a href="admin.html">Éditeur de scènes</a> · <a href="index.html">Ouvrir le livre</a></p></header>
+<header><h1>Administration — Encyclopédies</h1><p>V21.1 · Personnages, artefacts et lexique · <a href="admin.html">Éditeur de scènes</a> · <a href="index.html">Ouvrir le livre</a></p></header>
 <section class="panel"><h2>Publication GitHub</h2><p class="small">Les modifications sont locales jusqu'à « Publier ». Le jeton reste dans cet onglet, jamais dans les fichiers publiés. Pour les images, seuls les fichiers sélectionnés seront envoyés au dépôt lors de la publication.</p>
 <label for="token">Jeton GitHub (Contents : Read and write, dépôt uniquement)</label><input id="token" type="password" autocomplete="off" placeholder="github_pat_…">
 <div class="bar"><button id="publish">Publier cette encyclopédie</button><button id="export">Exporter le JSON</button><button id="clearToken">Effacer le jeton</button></div><p class="small notice" id="status" role="status">Chargement…</p></section>
@@ -105,8 +105,18 @@ $('publish').onclick=async()=>{
  try{
   message('Vérification des données GitHub…');
   const remote=await apiGet(spec.file,token);
-  if(!remote?.sha||!remote.content)throw Error('Fichier distant introuvable ou illisible.');
-  const actual=JSON.parse(decode64(remote.content));
+  if(!remote?.sha)throw Error('Fichier '+spec.file+' introuvable sur GitHub (vérifie le dépôt, la branche et les permissions du jeton).');
+  let actual;
+  if(remote.content && remote.encoding==='base64'){
+    actual=JSON.parse(decode64(remote.content));
+  }else{
+    // GitHub Contents API omet le contenu des fichiers > 1 Mo.
+    // Lire la version brute sur la même branche pour vérifier le contenu.
+    const rawUrl='https://raw.githubusercontent.com/erwanlyon/the-Sovereign-Order/'+BRANCH+'/'+spec.file+'?ts='+Date.now();
+    const raw=await fetch(rawUrl,{cache:'no-store'});
+    if(!raw.ok)throw Error('Impossible de lire le fichier volumineux '+spec.file+' (HTTP '+raw.status+').');
+    actual=await raw.json();
+  }
   if(JSON.stringify(actual)!==original[kind])throw Error('Les fiches ont changé sur GitHub depuis leur chargement. Recharge la page pour éviter un écrasement.');
   for(const img of newFiles){
    message('Envoi image : '+img.file.name);
