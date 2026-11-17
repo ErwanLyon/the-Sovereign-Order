@@ -1,12 +1,43 @@
-/* TSO V26.1 — cache minimal de l'interface uniquement.
-   Les scènes, les fiches et les images ne sont pas mises en cache automatiquement. */
-const SHELL='tso-v26-1-shell-2';
-const FILES=['./','./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
-self.addEventListener('install',e=>{e.waitUntil(caches.open(SHELL).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting()));});
-self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('tso-v')&&k!==SHELL).map(k=>caches.delete(k)))).then(()=>self.clients.claim()));});
-self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin)return;
-// Network-only for all data and images: no automatic offline download.
-if(u.pathname.includes('/data/')||/\.(?:png|jpe?g|webp|gif|svg|avif)$/i.test(u.pathname))return;
-if(e.request.mode==='navigate'){e.respondWith(fetch(e.request).catch(()=>caches.match('./index.html')));return;}
-if(u.pathname.endsWith('/manifest.webmanifest')||u.pathname.endsWith('/sw.js'))return;
+/* The Sovereign Order V26.2: network-first app shell, no bulk offline content. */
+const CACHE='tso-v26-2-shell';
+const SHELL=['./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
+self.addEventListener('install',event=>{
+  event.waitUntil((async()=>{
+    const cache=await caches.open(CACHE);
+    // Do not block activation if an optional asset is temporarily unavailable.
+    await Promise.allSettled(SHELL.map(async path=>{
+      const response=await fetch(new Request(path,{cache:'no-store'}));
+      if(response.ok)await cache.put(path,response);
+    }));
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener('activate',event=>{
+  event.waitUntil((async()=>{
+    const names=await caches.keys();
+    await Promise.all(names.filter(name=>name.startsWith('tso-v')&&name!==CACHE).map(name=>caches.delete(name)));
+    await self.clients.claim();
+  })());
+});
+self.addEventListener('fetch',event=>{
+  const request=event.request;
+  if(request.method!=='GET')return;
+  const url=new URL(request.url);
+  if(url.origin!==self.location.origin)return;
+  // Content and images are fetched on demand and never bulk-cached.
+  if(url.pathname.includes('/data/')||/\.(?:png|jpe?g|webp|gif|svg|avif)$/i.test(url.pathname))return;
+  if(request.mode==='navigate'){
+    event.respondWith((async()=>{
+      try{
+        const response=await fetch(new Request(request,{cache:'no-store'}));
+        if(response.ok){
+          const cache=await caches.open(CACHE);
+          await cache.put('./index.html',response.clone());
+        }
+        return response;
+      }catch(error){
+        return (await caches.match('./index.html'))||Response.error();
+      }
+    })());
+  }
 });

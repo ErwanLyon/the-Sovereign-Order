@@ -495,4 +495,23 @@ for(const [kind,entries] of Object.entries(referenceCollections)){
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close()});
 }
 
-}catch(e){console.error("Références",e)}})();</script><p style="text-align:center;color:#a9a093;font-size:11px">V17.1 · Contenu séparé · Nouveaux chapitres synchronisés à l’ouverture (connexion requise)</p><script id="tso-v26-pwa">if('serviceWorker' in navigator && location.protocol==='https:'){window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(err=>console.warn('Installation application indisponible',err)));}</script></body></html>
+}catch(e){console.error("Références",e)}})();</script><p style="text-align:center;color:#a9a093;font-size:11px">V17.1 · Contenu séparé · Nouveaux chapitres synchronisés à l’ouverture (connexion requise)</p><script id="tso-v26-pwa">(function(){
+  if(!('serviceWorker' in navigator)||location.protocol!=='https:')return;
+  const VERSION='26.2';
+  const FLAG='tso-pwa-updated-'+VERSION;
+  // Only reload when an existing worker is replaced; avoid loops on first installation.
+  const hadController=!!navigator.serviceWorker.controller;
+  let reloaded=false;
+  navigator.serviceWorker.addEventListener('controllerchange',function(){
+    if(!hadController||reloaded)return;
+    try{if(sessionStorage.getItem(FLAG)==='1')return;sessionStorage.setItem(FLAG,'1')}catch(e){}
+    reloaded=true;
+    window.location.reload();
+  });
+  window.addEventListener('load',async function(){
+    try{
+      const registration=await navigator.serviceWorker.register('./sw.js?v='+VERSION,{updateViaCache:'none'});
+      await registration.update();
+    }catch(err){console.warn('Mise à jour de l’application indisponible',err)}
+  });
+})();</script></body></html>
