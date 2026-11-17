@@ -5,7 +5,7 @@
 <header><h1>Administration — Encyclopédies</h1><p>V21.1 · Personnages, artefacts et lexique · <a href="admin.html">Éditeur de scènes</a> · <a href="index.html">Ouvrir le livre</a></p></header>
 <section class="panel"><h2>Publication GitHub</h2><p class="small">Les modifications sont locales jusqu'à « Publier ». Le jeton reste dans cet onglet, jamais dans les fichiers publiés. Pour les images, seuls les fichiers sélectionnés seront envoyés au dépôt lors de la publication.</p>
 <label for="token">Jeton GitHub (Contents : Read and write, dépôt uniquement)</label><input id="token" type="password" autocomplete="off" placeholder="github_pat_…">
-<div class="bar"><button id="publish">Publier cette encyclopédie</button><button id="export">Exporter le JSON</button><button id="clearToken">Effacer le jeton</button><button id="sync">Synchroniser depuis GitHub</button></div><p class="small notice" id="status" role="status">Chargement…</p></section>
+<div class="bar"><button id="publish">Publier cette encyclopédie</button><button id="export">Exporter le JSON</button><button id="clearToken">Effacer le jeton</button></div><p class="small notice" id="status" role="status">Chargement…</p></section>
 <div class="bar"><button data-kind="characters" class="kind selected">Personnages</button><button data-kind="artifacts" class="kind">Artefacts</button><button data-kind="lexicon" class="kind">Lexique</button></div>
 <div class="layout"><aside class="panel"><h2 id="listTitle">Personnages</h2><input id="search" placeholder="Rechercher…"><div id="list"></div><button id="add">+ Ajouter une fiche</button></aside>
 <section class="panel"><h2 id="formTitle">Fiche</h2><label>Nom</label><input id="name" placeholder="Nom de la fiche">
@@ -115,10 +115,32 @@ $('addPart').onclick=()=>{entries()[selected].parts.push({text:'',list:false});r
 $('newImage').onchange=async e=>{const item=entries()[selected];if(!item)return;let added=0;for(const inputFile of e.target.files){if(!['image/png','image/jpeg','image/webp','image/gif'].includes(inputFile.type)){feedback('Format non accepté : '+inputFile.name);continue}
  try{const file=await optimizeImage(inputFile);const path=uniqueImagePath(file.name);item.images.push(path);pending.characters.push({path,file});added++}catch(err){feedback(err.message)}}
  e.target.value='';renderRows();if(added)feedback(added+' image(s) ajoutée(s), prêtes à publier (optimisation automatique si nécessaire).')};
-$('sync').onclick=async()=>{if(!$('token').value.trim()){message('Saisis d’abord ton jeton GitHub pour synchroniser.',true);return}saveCurrent();if(Object.keys(original).some(k=>!sameData(cloneData(k),JSON.parse(original[k]))||pending[k]?.length)){message('Modifications locales non publiées : synchronisation annulée pour ne rien perdre.',true);return}
- try{message('Synchronisation depuis le dépôt GitHub…');await Promise.all(Object.keys(specs).map(k=>load(k,true)));selected=0;render();message('Fiches synchronisées depuis GitHub.')}catch(e){message('Synchronisation impossible : '+e.message,true)}};
 $('clearToken').onclick=()=>{$('token').value='';message('Jeton effacé de cet onglet.')};
 $('export').onclick=()=>{saveCurrent();const data=cloneData(kind);const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=specs[kind].file.split('/').pop();a.click();setTimeout(()=>URL.revokeObjectURL(a.href),2000)};
+
+async function publishReferenceNews(token,k,oldData,newData){
+ const keyName=specs[k].key;
+ const oldMap=new Map(oldData[keyName].map(x=>[x.name,x]));
+ const events=[];
+ const stamp=Date.now();
+ for(const item of newData[keyName]){
+  const prev=oldMap.get(item.name);
+  if(!prev||!sameData(prev.fields,item.fields)||!sameData(prev.parts||[],item.parts||[])){
+   events.push({id:k+'-'+item.name+'-'+stamp,type:k==='characters'?'character':k,name:item.name});
+  }
+  if(k==='characters'){
+   const before=new Set(prev?.images||[]);
+   for(const src of item.images)if(!before.has(src))events.push({id:'image-'+item.name+'-'+src+'-'+stamp,type:'image',name:item.name,src});
+  }
+ }
+ if(!events.length)return;
+ const path='data/updates.json',meta=await apiGet(path,token);
+ let feed={version:1,events:[]};
+ if(meta?.sha){({data:feed}=await remoteData(path,token))}
+ if(!Array.isArray(feed.events))throw Error('Format des notifications invalide');
+ feed.events.push(...events);
+ await apiPut(path,textB64(JSON.stringify(feed,null,2)),meta?.sha,token,'Notifications encyclopédies TSO');
+}
 $('publish').onclick=async()=>{
  if(busy)return;saveCurrent();const token=$('token').value.trim();if(!token){message('Saisis ton jeton GitHub.',true);return}
  const spec=specs[kind],data=cloneData(kind),newFiles=kind==='characters'?pending.characters:[];
@@ -137,10 +159,11 @@ $('publish').onclick=async()=>{
   message('Publication des fiches…');
   await apiPut(spec.file,textB64(JSON.stringify(data,null,2)),remote.sha,token,'Mise à jour encyclopédie TSO : '+spec.label);
   original[kind]=JSON.stringify(data);pending[kind]=[];
+  try{await publishReferenceNews(token,kind,remote.data,data)}catch(err){message('Fiches publiées, mais notification non enregistrée : '+err.message,true);return}
   message('Publication GitHub réussie. Actualise le livre après le déploiement GitHub Pages.');
  }catch(err){message('Publication interrompue : '+err.message+'. Les images déjà envoyées peuvent rester dans le dépôt.',true)}
  finally{busy=false;$('publish').disabled=false}
 };
 window.addEventListener('beforeunload',e=>{if(Object.keys(original).some(k=>JSON.stringify(cloneData(k))!==original[k])){e.preventDefault();e.returnValue=''}});
-Promise.all(Object.keys(specs).map(k=>load(k,false))).then(()=>{render();message('Encyclopédies chargées depuis le site. Avant de modifier une fiche, saisis ton jeton et clique sur « Synchroniser depuis GitHub » pour récupérer la version la plus récente.')}).catch(e=>{message('Impossible de charger les encyclopédies : '+e.message,true);$('publish').disabled=true});
+Promise.all(Object.keys(specs).map(k=>load(k,false))).then(()=>{render();message('Encyclopédies chargées. La vérification GitHub s’effectue automatiquement avant chaque publication.')}).catch(e=>{message('Impossible de charger les encyclopédies : '+e.message,true);$('publish').disabled=true});
 </script></body></html>

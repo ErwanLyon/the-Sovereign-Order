@@ -54,7 +54,59 @@ body.characters-open{overflow:hidden}
 #sceneDrawer .scene-entry{display:block;width:100%;text-align:left;color:#eee;background:transparent;border:0;border-radius:6px;padding:8px 10px}
 #sceneDrawer .scene-entry:hover,#sceneDrawer .scene-entry:focus{background:#43454c}
 #sceneDrawer .scene-count{font-size:12px;color:#bbb;margin:0 0 10px}
-</style></head><body><aside id="sceneDrawer" role="dialog" aria-label="Sommaire des scènes" aria-modal="false"><div class="drawer-head"><strong>Sommaire des scènes</strong><button id="closeSceneDrawer" type="button" aria-label="Fermer le sommaire">✕</button></div><p class="scene-count" id="sceneCount"></p><div id="sceneGroups"></div></aside><div class="shell"><header class="top"><div class="brand">THE SOVEREIGN ORDER</div><div class="actions"><button class="btn" id="tocBtn" aria-expanded="false">☷ Scènes</button><a class="btn" id="adminLink" href="admin.html" style="display:none;text-decoration:none">⚙ Administration</a><button class="btn" id="charactersBtn">♙ Personnages</button><button class="btn" id="artifactsBtn" type="button">◇ Artefacts</button><button class="btn" id="lexiconBtn" type="button">▤ Lexique</button><button class="btn" id="settingsBtn">⚙ Lecture</button></div></header><main class="stage"><div class="book" id="book"><div class="sheet" id="sheet"><div class="page" id="page"></div></div></div></main><div class="controls"><button class="btn" id="prev">← Précédente</button><div class="status" id="status"></div><button class="btn" id="next">Suivante →</button></div><div class="help">V19 — Tourne les pages depuis les coins : le papier se courbe · touches ← → ou boutons · Position mémorisée sur cet appareil · Nécessite Internet pour charger le moteur de pages</div></div><div aria-hidden="true" class="characters-overlay" id="charactersOverlay">
+</style>
+<script>
+window.TSONews=(()=>{
+ const KEY='tso-v22-seen-v1';
+ let events=[],seen=new Set(),ready=false;
+ const storage={get(){try{return JSON.parse(localStorage.getItem(KEY))}catch{return null}},put(v){try{localStorage.setItem(KEY,JSON.stringify(v))}catch{}}};
+ const id=e=>e.id;
+ function unseen(e){return !seen.has(id(e))}
+ function has(type,name,src){return events.some(e=>unseen(e)&&(!type||e.type===type||(type==='character'&&e.type==='image'))&&(!name||e.name===name)&&(!src||e.src===src))}
+ function badge(parent){const b=document.createElement('span');b.className='tso-new';b.textContent='Nouveau';parent.appendChild(b);return b}
+ function update(){
+  document.querySelectorAll('[data-news-type]').forEach(el=>{
+   const active=has(el.dataset.newsType,el.dataset.newsName||null,el.dataset.newsSrc||null);
+   let b=el.querySelector(':scope > .tso-new');
+   if(active&&!b)badge(el);
+   if(!active&&b)b.remove();
+  });
+  const groupMap=new Map();
+  for(const e of events)if(unseen(e)&&e.type==='scene'){const n=Number(e.number);groupMap.set(Math.floor(n/100)*100,true)}
+  document.querySelectorAll('[data-news-group]').forEach(el=>{
+   const active=groupMap.has(Number(el.dataset.newsGroup));
+   let b=el.querySelector(':scope > .tso-new');if(active&&!b)badge(el);if(!active&&b)b.remove();
+  });
+ }
+ function mark(type,name,src){
+  let changed=false;
+  for(const e of events){
+   if(e.type!==type||e.name!==name||(src&&e.src!==src)||(type==='image'&&!src))continue;
+   if(!seen.has(id(e))){seen.add(id(e));changed=true}
+  }
+  if(changed){storage.put({seen:[...seen]});update()}
+ }
+ async function init(){
+  try{
+   const r=await fetch('data/updates.json?ts='+Date.now(),{cache:'no-store'});
+   if(r.ok){const data=await r.json();events=Array.isArray(data.events)?data.events:[]}
+  }catch(e){console.warn('Notifications indisponibles',e)}
+  const saved=storage.get();
+  if(saved&&Array.isArray(saved.seen)){seen=new Set(saved.seen)}
+  else{seen=new Set(events.map(id));storage.put({seen:[...seen]})}
+  ready=true;update();
+ }
+ init();
+ return {has,mark,badge,update,get ready(){return ready}};
+})();
+</script>
+<style>
+.tso-new{display:inline-block;margin-left:7px;padding:2px 6px;border-radius:5px;background:#9b7137;color:#fff5dd;font:600 10px/1.4 system-ui,sans-serif;vertical-align:middle;white-space:nowrap}
+.character-tile,.reference-tile{position:relative}
+.character-gallery .tso-image-wrap{display:inline-flex;position:relative;flex-direction:column;align-items:center;margin:5px}
+.tso-image-wrap img{max-width:100%}
+</style>
+</head><body><aside id="sceneDrawer" role="dialog" aria-label="Sommaire des scènes" aria-modal="false"><div class="drawer-head"><strong>Sommaire des scènes</strong><button id="closeSceneDrawer" type="button" aria-label="Fermer le sommaire">✕</button></div><p class="scene-count" id="sceneCount"></p><div id="sceneGroups"></div></aside><div class="shell"><header class="top"><div class="brand">THE SOVEREIGN ORDER</div><div class="actions"><button class="btn" id="tocBtn" aria-expanded="false">☷ Scènes</button><a class="btn" id="adminLink" href="admin.html" style="display:none;text-decoration:none">⚙ Administration</a><button class="btn" id="charactersBtn">♙ Personnages</button><button class="btn" id="artifactsBtn" type="button">◇ Artefacts</button><button class="btn" id="lexiconBtn" type="button">▤ Lexique</button><button class="btn" id="settingsBtn">⚙ Lecture</button></div></header><main class="stage"><div class="book" id="book"><div class="sheet" id="sheet"><div class="page" id="page"></div></div></div></main><div class="controls"><button class="btn" id="prev">← Précédente</button><div class="status" id="status"></div><button class="btn" id="next">Suivante →</button></div><div class="help">V19 — Tourne les pages depuis les coins : le papier se courbe · touches ← → ou boutons · Position mémorisée sur cet appareil · Nécessite Internet pour charger le moteur de pages</div></div><div aria-hidden="true" class="characters-overlay" id="charactersOverlay">
 <div aria-label="Encyclopédie des personnages" aria-modal="true" class="characters-dialog" role="dialog">
 <div class="characters-head"><div><div class="characters-eyebrow">THE SOVEREIGN ORDER</div><h2>Personnages</h2></div><button aria-label="Fermer" class="btn" id="charactersClose" type="button">✕ Fermer</button></div>
 <div id="charactersIndex"><input aria-label="Rechercher un personnage" autocomplete="off" class="character-search" id="characterSearch" placeholder="Rechercher un personnage…"/><div class="character-count" id="charactersCount"></div><div class="characters-list" id="charactersList"></div></div>
@@ -204,10 +256,10 @@ const drawer=$('sceneDrawer'), groups=$('sceneGroups');
 const buckets=new Map();
 scenes.forEach((scene,i)=>{const number=Number(scene.number)||i+1;const start=Math.floor(number/100)*100;if(!buckets.has(start))buckets.set(start,[]);buckets.get(start).push({scene,i,number});});
 for(const [start,items] of [...buckets.entries()].sort((a,b)=>a[0]-b[0])){
- const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent=`Scènes ${start}+ (${items.length})`;details.appendChild(summary);
- for(const item of items){const b=document.createElement('button');b.type='button';b.className='scene-entry';b.textContent=`${item.number} — ${item.scene.title||'Sans titre'}`;b.onclick=()=>{jumpScene(item.i);closeDrawer()};details.appendChild(b)}groups.appendChild(details);
+ const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent=`Scènes ${start}+ (${items.length})`;summary.dataset.newsGroup=start;details.appendChild(summary);
+ for(const item of items){const b=document.createElement('button');b.type='button';b.className='scene-entry';b.textContent=`${item.number} — ${item.scene.title||'Sans titre'}`;b.dataset.newsType='scene';b.dataset.newsName=String(item.number);b.onclick=()=>{jumpScene(item.i);window.TSONews.mark('scene',String(item.number));closeDrawer()};details.appendChild(b)}groups.appendChild(details);
 }
-$('sceneCount').textContent=`${scenes.length} scène(s) disponibles`;
+$('tocBtn').dataset.newsType='scene';$('sceneCount').textContent=`${scenes.length} scène(s) disponibles`;setTimeout(()=>window.TSONews.update(),100);
 function closeDrawer(){drawer.classList.remove('open');$('tocBtn').setAttribute('aria-expanded','false')}
 $('closeSceneDrawer').onclick=closeDrawer;
 document.addEventListener('pointerdown',e=>{if(drawer.classList.contains('open')&&!drawer.contains(e.target)&&!$('tocBtn').contains(e.target))closeDrawer()});
@@ -246,11 +298,11 @@ const charSearch=document.getElementById('characterSearch');
 const charInfo=document.getElementById('characterInfo');
 function escapeCharText(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 function showCharIndex(){charDetail.hidden=true;charIndex.hidden=false;drawCharList();}
-function drawCharList(){const q=charSearch.value.trim().toLocaleLowerCase('fr');const found=readerCharacters.filter(c=>c.name.toLocaleLowerCase('fr').includes(q));document.getElementById('charactersCount').textContent=found.length+' personnage'+(found.length>1?'s':'');charList.innerHTML='';for(const c of found){const b=document.createElement('button');b.type='button';b.className='character-tile';const pic=c.images[0];if(pic){const im=document.createElement('img');im.src=pic;im.loading='lazy';im.alt='Portrait de '+c.name;b.appendChild(im)}const label=document.createElement('div');label.className='char-name';label.textContent=c.name;b.appendChild(label);b.addEventListener('click',()=>showCharacter(c));charList.appendChild(b)}}
-function showCharacter(c){charIndex.hidden=true;charDetail.hidden=false;charInfo.innerHTML='';const hero=document.createElement('div');hero.className='character-hero';const cover=document.createElement('div');if(c.images.length){const im=document.createElement('img');im.src=c.images[0];im.alt='Portrait de '+c.name;im.addEventListener('click',()=>openCharacterImage(im.src));cover.appendChild(im)}hero.appendChild(cover);const content=document.createElement('div');const h=document.createElement('h3');h.textContent=c.name;content.appendChild(h);for(const [k,v] of c.fields){const p=document.createElement('p');p.className='character-field';const strong=document.createElement('strong');strong.textContent=k+' : ';p.appendChild(strong);p.appendChild(document.createTextNode(v));content.appendChild(p)}hero.appendChild(content);charInfo.appendChild(hero);if(c.images.length>1){const title=document.createElement('h3');title.textContent='Galerie de portraits';charInfo.appendChild(title);const gallery=document.createElement('div');gallery.className='character-gallery';for(const src of c.images){const im=document.createElement('img');im.src=src;im.loading='lazy';im.alt='Illustration de '+c.name;im.addEventListener('click',()=>openCharacterImage(src));gallery.appendChild(im)}charInfo.appendChild(gallery)}document.querySelector('.characters-dialog').scrollTop=0;}
-function openCharacterImage(src){const layer=document.createElement('div');layer.className='character-lightbox';const img=document.createElement('img');img.src=src;layer.appendChild(img);layer.addEventListener('click',()=>layer.remove());document.body.appendChild(layer)}
+function drawCharList(){const q=charSearch.value.trim().toLocaleLowerCase('fr');const found=readerCharacters.filter(c=>c.name.toLocaleLowerCase('fr').includes(q));document.getElementById('charactersCount').textContent=found.length+' personnage'+(found.length>1?'s':'');charList.innerHTML='';for(const c of found){const b=document.createElement('button');b.type='button';b.className='character-tile';const pic=c.images[0];if(pic){const im=document.createElement('img');im.src=pic;im.loading='lazy';im.alt='Portrait de '+c.name;b.appendChild(im)}const label=document.createElement('div');label.className='char-name';label.textContent=c.name;b.appendChild(label);b.dataset.newsType='character';b.dataset.newsName=c.name;b.addEventListener('click',()=>showCharacter(c));charList.appendChild(b)}window.TSONews.update()}
+function showCharacter(c){window.TSONews.mark('character',c.name);charIndex.hidden=true;charDetail.hidden=false;charInfo.innerHTML='';const hero=document.createElement('div');hero.className='character-hero';const cover=document.createElement('div');if(c.images.length){const im=document.createElement('img');im.src=c.images[0];im.alt='Portrait de '+c.name;im.addEventListener('click',()=>openCharacterImage(im.src,c.name));const wrap=document.createElement('span');wrap.className='tso-image-wrap';wrap.dataset.newsType='image';wrap.dataset.newsName=c.name;wrap.dataset.newsSrc=c.images[0];wrap.appendChild(im);cover.appendChild(wrap)}hero.appendChild(cover);const content=document.createElement('div');const h=document.createElement('h3');h.textContent=c.name;content.appendChild(h);for(const [k,v] of c.fields){const p=document.createElement('p');p.className='character-field';const strong=document.createElement('strong');strong.textContent=k+' : ';p.appendChild(strong);p.appendChild(document.createTextNode(v));content.appendChild(p)}hero.appendChild(content);charInfo.appendChild(hero);if(c.images.length>1){const title=document.createElement('h3');title.textContent='Galerie de portraits';charInfo.appendChild(title);const gallery=document.createElement('div');gallery.className='character-gallery';for(const src of c.images){const im=document.createElement('img');im.src=src;im.loading='lazy';im.alt='Illustration de '+c.name;im.addEventListener('click',()=>openCharacterImage(src,c.name));const wrap=document.createElement('span');wrap.className='tso-image-wrap';wrap.dataset.newsType='image';wrap.dataset.newsName=c.name;wrap.dataset.newsSrc=src;wrap.appendChild(im);gallery.appendChild(wrap)}charInfo.appendChild(gallery)}window.TSONews.update();document.querySelector('.characters-dialog').scrollTop=0;}
+function openCharacterImage(src,name){window.TSONews.mark('image',name,src);const layer=document.createElement('div');layer.className='character-lightbox';const img=document.createElement('img');img.src=src;layer.appendChild(img);layer.addEventListener('click',()=>layer.remove());document.body.appendChild(layer)}
 function closeCharacters(){charOverlay.classList.remove('open');charOverlay.setAttribute('aria-hidden','true');document.body.classList.remove('characters-open');}
-document.getElementById('charactersBtn').addEventListener('click',()=>{showCharIndex();charOverlay.classList.add('open');charOverlay.setAttribute('aria-hidden','false');document.body.classList.add('characters-open');});
+document.getElementById('charactersBtn').dataset.newsType='character';document.getElementById('charactersBtn').dataset.newsType='character';document.getElementById('charactersBtn').addEventListener('click',()=>{showCharIndex();charOverlay.classList.add('open');charOverlay.setAttribute('aria-hidden','false');document.body.classList.add('characters-open');});
 document.getElementById('charactersClose').addEventListener('click',closeCharacters);
 document.getElementById('charactersBack').addEventListener('click',showCharIndex);
 charSearch.addEventListener('input',drawCharList);
@@ -267,9 +319,9 @@ for(const [kind,entries] of Object.entries(referenceCollections)){
  const overlay=$r('Overlay'), index=$r('Index'), detail=$r('Detail'), search=$r('Search'), list=$r('List'), info=$r('Info');
  function close(){overlay.classList.remove('open');overlay.setAttribute('aria-hidden','true');if(!document.querySelector('.characters-overlay.open'))document.body.classList.remove('characters-open')}
  function showList(){detail.hidden=true;index.hidden=false;renderList()}
- function renderList(){const q=search.value.trim().toLocaleLowerCase('fr');const matches=entries.filter(e=>(e.name+' '+e.fields.map(x=>x.join(' ')).join(' ')+' '+e.parts.map(x=>x.text).join(' ')).toLocaleLowerCase('fr').includes(q));$r('Count').textContent=matches.length+' entrée'+(matches.length>1?'s':'');list.replaceChildren();for(const entry of matches){const btn=document.createElement('button');btn.type='button';btn.className='reference-tile';btn.textContent=entry.name;btn.addEventListener('click',()=>showEntry(entry));list.appendChild(btn)}}
- function showEntry(entry){index.hidden=true;detail.hidden=false;info.replaceChildren();const card=document.createElement('article');card.className='reference-detail';const h=document.createElement('h3');h.textContent=entry.name;card.appendChild(h);for(const [label,value] of entry.fields){const p=document.createElement('p');p.className='reference-field';const strong=document.createElement('strong');strong.textContent=label;p.appendChild(strong);p.appendChild(document.createTextNode(value));card.appendChild(p)}for(const part of entry.parts){const p=document.createElement('p');p.className='reference-paragraph'+(part.list?' reference-listline':'');p.textContent=part.text;card.appendChild(p)}info.appendChild(card);overlay.querySelector('.characters-dialog').scrollTop=0}
- $r('Btn').addEventListener('click',()=>{showList();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('characters-open')});
+ function renderList(){const q=search.value.trim().toLocaleLowerCase('fr');const matches=entries.filter(e=>(e.name+' '+e.fields.map(x=>x.join(' ')).join(' ')+' '+e.parts.map(x=>x.text).join(' ')).toLocaleLowerCase('fr').includes(q));$r('Count').textContent=matches.length+' entrée'+(matches.length>1?'s':'');list.replaceChildren();for(const entry of matches){const btn=document.createElement('button');btn.type='button';btn.className='reference-tile';btn.textContent=entry.name;btn.dataset.newsType=kind;btn.dataset.newsName=entry.name;btn.addEventListener('click',()=>showEntry(entry));list.appendChild(btn)}window.TSONews.update()}
+ function showEntry(entry){window.TSONews.mark(kind,entry.name);index.hidden=true;detail.hidden=false;info.replaceChildren();const card=document.createElement('article');card.className='reference-detail';const h=document.createElement('h3');h.textContent=entry.name;card.appendChild(h);for(const [label,value] of entry.fields){const p=document.createElement('p');p.className='reference-field';const strong=document.createElement('strong');strong.textContent=label;p.appendChild(strong);p.appendChild(document.createTextNode(value));card.appendChild(p)}for(const part of entry.parts){const p=document.createElement('p');p.className='reference-paragraph'+(part.list?' reference-listline':'');p.textContent=part.text;card.appendChild(p)}info.appendChild(card);overlay.querySelector('.characters-dialog').scrollTop=0}
+ $r('Btn').dataset.newsType=kind;$r('Btn').addEventListener('click',()=>{showList();overlay.classList.add('open');overlay.setAttribute('aria-hidden','false');document.body.classList.add('characters-open')});
  $r('Close').addEventListener('click',close);$r('Back').addEventListener('click',showList);search.addEventListener('input',renderList);
  overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&overlay.classList.contains('open'))close()});
