@@ -6384,8 +6384,9 @@
     {
       "title": "Veille d’Infiltration",
       "place": "Complexe de l’Ordre - Cellule de Donna",
-      "time": "Petite cellule de pierre nue.",
+      "time": "",
       "paragraphs": [
+        "Petite cellule de pierre nue.",
         "Un lit de pierre. Une paillasse repliée.",
         "Deux anneaux d’acier sont fixés au mur. Les chaînes s’y attachent. Donna s’est elle-même enchaînée les poignets.",
         "",
@@ -7542,12 +7543,8 @@
     {
       "title": "Le Lasso du Vrai",
       "place": "Chambre d’Hippolyta – Themyscira, nuit profonde",
-      "time": "",
+      "time": "Le silence est dense. La tension dans la pièce n’est plus celle du combat, mais celle de l’âme.",
       "paragraphs": [
-        "Le silence est dense. La tension dans la pièce n’est plus celle du combat, mais celle de l’âme.",
-        "",
-        "",
-        "",
         "Diana (voix basse, grave) :",
         "– « Regarde-le, Mère. Sens sa texture. Son poids. Sa présence. »",
         "",
@@ -7900,12 +7897,8 @@
     {
       "title": "La Vision : Le Temple de la Nouvelle Voix",
       "place": "Un temple blanc, vaste et purifié",
-      "time": "",
+      "time": "Hippolyta s’y tient droite, auréolée de calme. Son diadème a disparu.",
       "paragraphs": [
-        "Hippolyta s’y tient droite, auréolée de calme. Son diadème a disparu.",
-        "",
-        "",
-        "",
         "Le lieu n’existe pas.",
         "Ou pas encore.",
         "Mais dans l’esprit d’Hippolyta, il est clair, lumineux, taillé dans une pierre blanche presque irréelle.",
@@ -8271,10 +8264,8 @@
     {
       "title": "Rapport, Sanction, et Préparation",
       "place": "Salle du Trône – Quartier Central du Sovereign",
-      "time": "",
+      "time": "Diana et Donna sont à genoux devant le Sovereign. La salle est vide.",
       "paragraphs": [
-        "Diana et Donna sont à genoux devant le Sovereign. La salle est vide.",
-        "",
         "Le Sovereign, debout, silencieux, les observe longuement.",
         "",
         "– « Debout. »",
@@ -8411,12 +8402,8 @@
     {
       "title": "Premier Ancrage du Maître",
       "place": "Salle de Reconditionnement D – Complexe de l’Ordre",
-      "time": "",
+      "time": "Lumière douce, espace silencieux, fauteuil incliné au centre, murs d’obsidienne.",
       "paragraphs": [
-        "Lumière douce, espace silencieux, fauteuil incliné au centre, murs d’obsidienne.",
-        "",
-        "",
-        "",
         "Hippolyta est assise, calme.",
         "Ses poignets reposent dans le creux des accoudoirs, ouverts.",
         "",
@@ -8690,11 +8677,8 @@
     {
       "title": "Troisième Ancrage du Maître",
       "place": "Salle de Reconditionnement D – Complexe de l’Ordre",
-      "time": "",
+      "time": "Quelques minutes après l’ancrage précédent.",
       "paragraphs": [
-        "Quelques minutes après l’ancrage précédent.",
-        "",
-        "",
         "Le Sovereign s’est redressé. Il tourne lentement autour du fauteuil, mains croisées dans le dos.",
         "",
         "Sa voix est grave, presque calme :",
@@ -8810,11 +8794,8 @@
     {
       "title": "Quatrième Ancrage du Maître",
       "place": "Salle de Reconditionnement D – Complexe de l’Ordre",
-      "time": "",
+      "time": "Hippolyta est toujours assise dans le fauteuil. Le lasso noir enserre ses bras, son torse, sa taille.",
       "paragraphs": [
-        "Hippolyta est toujours assise dans le fauteuil. Le lasso noir enserre ses bras, son torse, sa taille.",
-        "",
-        "",
         "Le Sovereign fait quelques pas, lentement, autour d’Hippolyta.",
         "",
         "– « Jadis, tu régnais par la parole. »",
@@ -8920,11 +8901,8 @@
     {
       "title": "Cinquième Ancrage : Le Trône sous Ordre",
       "place": "Salle de Reconditionnement D – Complexe de l’Ordre",
-      "time": "",
+      "time": "Hippolyta est nue, docile, sanglée dans le fauteuil de réécriture.",
       "paragraphs": [
-        "Hippolyta est nue, docile, sanglée dans le fauteuil de réécriture.",
-        "",
-        "",
         "Le Sovereign s’approche à nouveau. Il parle doucement, comme à une élève que l’on façonne :",
         "",
         "– « Tu resteras Reine. »",
@@ -9032,11 +9010,8 @@
     {
       "title": "Sixième Ancrage : L’Amour Corrompu",
       "place": "Salle de Reconditionnement D – Complexe de l’Ordre",
-      "time": "",
+      "time": "Hippolyta est toujours attachée au fauteuil, nue, paisible, le lasso noir enroulé.",
       "paragraphs": [
-        "Hippolyta est toujours attachée au fauteuil, nue, paisible, le lasso noir enroulé.",
-        "",
-        "",
         "Il s’avance, se penche à son oreille :",
         "",
         "– « Tu étais une mère. »",
@@ -9129,11 +9104,8 @@
     {
       "title": "Septième Ancrage : L’Ordre avant le Sang",
       "place": "Salle de Reconditionnement – Complexe de l’Ordre",
-      "time": "",
+      "time": "Lumière tamisée. Le lasso noir brille d’un éclat doux, presque vivant.",
       "paragraphs": [
-        "Lumière tamisée. Le lasso noir brille d’un éclat doux, presque vivant.",
-        "",
-        "",
         "Il s’approche.",
         "",
         "– « Il reste une corde, fine mais résistante.",
@@ -9237,11 +9209,8 @@
     {
       "title": "Quartiers du Sovereign : L’Ordre Réuni",
       "place": "Appartements privés du Sovereign – Nuit silencieuse",
-      "time": "",
+      "time": "Aucun bruit, sinon la respiration mesurée de trois femmes disciplinées.",
       "paragraphs": [
-        "Aucun bruit, sinon la respiration mesurée de trois femmes disciplinées.",
-        "",
-        "",
         "Le Sovereign traverse un couloir sans un mot.",
         "Derrière lui, Hippolyta le suit. Nue, droite, paisible.",
         "",
@@ -9343,12 +9312,8 @@
     {
       "title": "L’Unité au pied du Maître",
       "place": "Appartements privés du Sovereign – Nuit encore",
-      "time": "",
+      "time": "Ambiance feutrée, contenue, solennelle. La lumière est plus douce encore.",
       "paragraphs": [
-        "Ambiance feutrée, contenue, solennelle. La lumière est plus douce encore.",
-        "",
-        "",
-        "",
         "La porte s’ouvre sans bruit.",
         "Le Sovereign entre.",
         "Elles l’attendent.",
@@ -10223,12 +10188,8 @@
     {
       "title": "La Convocation",
       "place": "Salle d’audience du Palais Royal — Themyscira",
-      "time": "",
+      "time": "Nuit tombée. Lumière froide. Silence pesant.",
       "paragraphs": [
-        "Nuit tombée. Lumière froide. Silence pesant.",
-        "",
-        "",
-        "",
         "La salle est nue.",
         "",
         "Pas d’étendards. Pas de symboles des anciennes déesses.",
@@ -10420,11 +10381,8 @@
     {
       "title": "Communication & Nouvel Ordre",
       "place": "Sanctuaire d’Hestia, redésacralisé",
-      "time": "",
+      "time": "Nuit, vents faibles. La mer gronde au loin.",
       "paragraphs": [
-        "Nuit, vents faibles. La mer gronde au loin.",
-        "",
-        "",
         "Dans l’obscurité du sanctuaire, vidé de ses icônes, seule une petite alcôve est restée intacte.",
         "Derrière l’autel renversé, Hippolyta s’agenouille.",
         "",
@@ -10508,12 +10466,8 @@
     {
       "title": "L’ouverture de l’île",
       "place": "Grand amphithéâtre de Themyscira",
-      "time": "",
+      "time": "Matin solennel – ciel voilé, marée descendante. Toutes les amazones sont rassemblées.",
       "paragraphs": [
-        "Matin solennel – ciel voilé, marée descendante. Toutes les amazones sont rassemblées.",
-        "",
-        "",
-        "",
         "Hippolyta avance lentement vers le promontoire.",
         "",
         "Elle n’a ni couronne, ni armure royale.",
@@ -10719,10 +10673,8 @@
     {
       "title": "La Voix et l’Écoute",
       "place": "Sanctuaire intérieur du Palais Royal",
-      "time": "",
+      "time": "Nuit. Sceau de communication crypté, caché dans le sol de marbre.",
       "paragraphs": [
-        "Nuit. Sceau de communication crypté, caché dans le sol de marbre.",
-        "",
         "La voix du Sovereign naît dans la flamme.",
         "",
         "",
@@ -10825,10 +10777,8 @@
     {
       "title": "Deux Mondes",
       "place": "Monde des Hommes, Complexe de l’Ordre – Hangar 12",
-      "time": "",
+      "time": "Aube naissante.",
       "paragraphs": [
-        "Aube naissante.",
-        "",
         "Le sol de béton résonne du bruit des bottes.",
         "",
         "Elles sont là : trente jeunes femmes, droites, silencieuses, formant une double ligne parfaite.",
