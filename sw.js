@@ -1,5 +1,5 @@
-/* The Sovereign Order V27.2: network-first app shell, no bulk offline content. */
-const CACHE='tso-v27-2-shell';
+/* The Sovereign Order v28: network-first app shell, no bulk offline content. */
+const CACHE='tso-v28shell';
 const SHELL=['./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{

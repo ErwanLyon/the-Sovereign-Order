@@ -261,6 +261,28 @@ $('loadFile').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;scen
 $('newsMode').value=localStorage.getItem('tso-v22-scene-mode')==='normal'?'normal':'catchup';
 $('newsMode').onchange=()=>localStorage.setItem('tso-v22-scene-mode',$('newsMode').value);
 const GH_OWNER='erwanlyon', GH_REPO='the-Sovereign-Order', GH_BRANCH='main', GH_PATH='data/scenes.json';
+
+// V28: shard publication. The index is written LAST, making it the activation marker.
+async function v28PutFile(token,path,content){
+ const api='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/contents/'+path;
+ const response=await fetch(api+'?ref='+GH_BRANCH,{headers:githubHeaders(token),cache:'no-store'});
+ if(response.status!==404&&!response.ok)throw Error(await githubError(response));
+ const existing=response.status===404?null:await response.json();
+ const body={message:'TSO V28 : '+path,content:encodeGitHubBase64(content),branch:GH_BRANCH};
+ if(existing?.sha)body.sha=existing.sha;
+ const put=await fetch(api,{method:'PUT',headers:{...githubHeaders(token),'Content-Type':'application/json'},body:JSON.stringify(body)});
+ if(!put.ok)throw Error(path+' : '+await githubError(put));
+}
+async function v28PublishChunks(token){
+ const size=25,revision=String(Date.now());
+ for(let start=0;start<scenes.length;start+=size){
+  const filename='data/scenes-'+String(Math.floor(start/size)+1).padStart(4,'0')+'.json';
+  ghMessage('Publication des groupes : '+(Math.floor(start/size)+1)+' / '+Math.ceil(scenes.length/size)+'…');
+  await v28PutFile(token,filename,JSON.stringify({version:1,start:start+1,scenes:scenes.slice(start,start+size)}));
+ }
+ return {version:1,revision,chunkSize:size,count:scenes.length,scenes:scenes.map((s,i)=>({number:i+1,title:s.title||''}))};
+}
+
 function ghMessage(msg,err=false){$('publishStatus').textContent=msg;$('publishStatus').className='hint '+(err?'warn':'ok')}
 function githubHeaders(token){return {'Accept':'application/vnd.github+json','Authorization':'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28'}}
 function decodeGitHubBase64(content){const binary=atob(content.replace(/\s/g,''));const bytes=Uint8Array.from(binary,c=>c.charCodeAt(0));return new TextDecoder().decode(bytes)}
@@ -292,7 +314,7 @@ $('publish').onclick=async()=>{
  if(!token){ghMessage('Renseigne ton jeton GitHub avant de publier.',true);return}
  if(!scenes.length){ghMessage('Aucune scène à publier.',true);return}
  save();
- if(!confirm('Publier '+scenes.length+' scènes dans '+GH_OWNER+'/'+GH_REPO+' ? Cette action remplacera data/scenes.json sur le site public.'))return;
+ if(!confirm('Publier '+scenes.length+' scènes dans '+GH_OWNER+'/'+GH_REPO+' ? Les scènes seront publiées en groupes de 25, et scenes.json restera disponible pour l’éditeur.'))return;
  publishing=true;$('publish').disabled=true;
  try{
   ghMessage('Vérification de la version actuellement présente sur GitHub…');
@@ -310,10 +332,13 @@ $('publish').onclick=async()=>{
    throw Error('Le fichier sur GitHub a changé depuis ton chargement. Publication annulée pour éviter de perdre des scènes. Exporte ton travail, recharge la page et fusionne tes modifications.');
   }
   const previousCount=remoteScenes.length;
+  const v28Index=await v28PublishChunks(token);
   const data=JSON.stringify({version:2,scenes},null,2);
   ghMessage('Envoi de la nouvelle version à GitHub…');
   const put=await fetch(api,{method:'PUT',headers:{...githubHeaders(token),'Content-Type':'application/json'},body:JSON.stringify({message:'Publication de scènes depuis l’éditeur TSO V18',content:encodeGitHubBase64(data),sha:remote.sha,branch:GH_BRANCH})});
   if(!put.ok)throw Error(await githubError(put));
+  ghMessage('Activation du chargement progressif…');
+  await v28PutFile(token,'data/scenes-index.json',JSON.stringify(v28Index));
   markBaseline();dirty=false;
   let note='';
   try{const n=await writeSceneNotifications(token,previousCount);note=n?' '+n+' nouvelle(s) scène(s) signalée(s).':''}
