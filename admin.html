@@ -223,21 +223,47 @@ $('content').addEventListener('paste',e=>{
  }
  while(safe.length&&safe[safe.length-1]==='')safe.pop();
  const imported=sceneHeaderFromParagraphs(safe,plain);
- if(imported&&scenes[selected]){
-   const hasContent=getParagraphs().some(p=>decodedText(p).trim())||
-     ['title','place','time'].some(k=>$(k).value.trim());
-   if(!hasContent||confirm('Une scène complète a été reconnue (scène '+imported.number+'). Remplacer les champs et le texte de la scène actuelle ?')){
-     $('title').value=imported.title;
-     $('place').value=imported.place;
-     $('time').value=imported.time;
-     $('content').innerHTML=htmlToEditor(imported.paragraphs);
-     dirty=true;
-     $('feedback').textContent='Scène complète importée : titre, lieu, moment et '+imported.paragraphs.length+' paragraphes. Vérifie puis enregistre.';
-     return;
+ if(imported){
+   const target=imported.number-1;
+   if(!Number.isSafeInteger(imported.number)||imported.number<1){
+     $('feedback').textContent='Numéro de scène invalide : importation annulée.';return;
    }
-   // Annulation : ne rien insérer pour éviter de dupliquer l'en-tête.
+   // L'en-tête Word détermine la destination, pas la scène actuellement affichée.
+   // Ne jamais renuméroter les scènes existantes ni écraser sans confirmation.
+   if(target>scenes.length){
+     $('feedback').textContent='La scène '+imported.number+' ne peut pas être créée : la prochaine scène disponible est la '+(scenes.length+1)+'.';return;
+   }
+   const replacing=target<scenes.length;
+   const old=scenes[target];
+   const existingLabel=old?.title?' (« '+old.title+' »)':'';
+   const question=replacing
+     ?'La scène '+imported.number+existingLabel+' existe déjà.\n\nRemplacer son titre, son lieu, son moment et TOUT son texte par la version collée depuis Word ?\n\nLa modification restera locale jusqu’à la publication sur GitHub.'
+     :'Créer la scène '+imported.number+' avec le contenu collé depuis Word ?';
+   if(!confirm(question)){
+     $('feedback').textContent='Importation annulée : aucune scène remplacée.';return;
+   }
+   // Préserver les modifications en cours de la scène affichée avant de changer
+   // de sélection, sauf si cette même scène est précisément celle remplacée.
+   if(selected!==target&&scenes[selected])save();
+   // Le bouton « Ajouter une scène » peut avoir créé une fiche vide temporaire.
+   // Ne l'effacer que si elle est en toute dernière position et entièrement vide.
+   const current=scenes[selected];
+   const emptyPlaceholder=selected===scenes.length-1&&selected!==target&&current&&
+     !current.title?.trim()&&!current.place?.trim()&&!current.time?.trim()&&
+     !(current.paragraphs||[]).some(p=>decodedText(p).trim());
+   if(emptyPlaceholder&&replacing)scenes.pop();
+   const record={title:imported.title,place:imported.place,time:imported.time,
+     paragraphs:imported.paragraphs,layout:'word-lines'};
+   if(target===scenes.length)scenes.push(record);
+   else scenes[target]=record;
+   selected=target;
+   dirty=true;
+   render();
+   $('feedback').textContent=(replacing?'Scène '+imported.number+' remplacée':'Scène '+imported.number+' créée')+
+     ' depuis Word ('+imported.paragraphs.length+' paragraphes). Vérifie puis publie sur GitHub.';
    return;
  }
+
  const markup=safe.map(p=>'<p>'+(p||'<br>')+'</p>').join('');
  $('content').focus();
  document.execCommand('insertHTML',false,markup);
