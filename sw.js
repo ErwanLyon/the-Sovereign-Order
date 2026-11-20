@@ -1,5 +1,5 @@
 /* The Sovereign Order v28: network-first app shell, no bulk offline content. */
-const CACHE='tso-v28shell';
+const CACHE='tso-v29shell';
 const SHELL=['./index.html','./manifest.webmanifest','./icons/icon-192.png','./icons/icon-512.png'];
 self.addEventListener('install',event=>{
   event.waitUntil((async()=>{
@@ -40,4 +40,45 @@ self.addEventListener('fetch',event=>{
       }
     })());
   }
+});
+
+
+/* V29: FCM background messaging integrated with the existing PWA worker.
+   Do not change the book's network-first cache and update behavior. */
+importScripts('https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js');
+importScripts('https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging-compat.js');
+firebase.initializeApp({
+  apiKey: "AIzaSyB8SJEoHutE0suv7beC9bUZfOU50Wp-M5s",
+  authDomain: "tso-the-sovereign-order.firebaseapp.com",
+  projectId: "tso-the-sovereign-order",
+  storageBucket: "tso-the-sovereign-order.firebasestorage.app",
+  messagingSenderId: "345540545184",
+  appId: "1:345540545184:web:8b797cf91d5683f07f97c5"
+});
+const tsoMessaging=firebase.messaging();
+tsoMessaging.onBackgroundMessage(payload=>{
+  // FCM displays notification payloads itself in the background.
+  // Only display custom notifications for data-only messages.
+  if(payload.notification)return;
+  const data=payload.data||{};
+  const title=data.title||'The Sovereign Order';
+  const body=data.body||'Une nouveauté est disponible.';
+  return self.registration.showNotification(title,{
+    body,icon:'./icons/icon-192.png',badge:'./icons/icon-192.png',
+    data:{url:data.url||'./index.html'}
+  });
+});
+self.addEventListener('notificationclick',event=>{
+  event.notification.close();
+  const url=new URL(event.notification.data?.url||'./index.html',self.registration.scope);
+  if(url.origin!==self.location.origin)return;
+  event.waitUntil((async()=>{
+    const windows=await clients.matchAll({type:'window',includeUncontrolled:true});
+    for(const client of windows){
+      if(client.url.startsWith(self.registration.scope)){
+        await client.focus();return;
+      }
+    }
+    await clients.openWindow(url.href);
+  })());
 });

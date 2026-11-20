@@ -187,6 +187,25 @@ body[data-reader-theme] .engine-error{background:var(--reader-ui);color:var(--re
 <label for="size">Taille du texte : <output id="sizeValue"></output></label><input id="size" max="26" min="14" step="1" type="range" value="18"/>
 <label for="readerSpacing">Espacement des lignes</label><select id="readerSpacing"><option value="compact">Compact</option><option value="normal">Normal</option><option value="wide">Aéré</option></select>
 <p class="reader-settings-hint">La pagination se réadapte automatiquement. Les réglages sont mémorisés sur cet appareil.</p>
+
+<hr style="border:0;border-top:1px solid var(--reader-ui-border,#806846);margin:22px 0 14px">
+<h3 style="font:normal 21px Georgia,serif;color:var(--reader-heading,#d6b579);margin:0 0 8px">Notifications</h3>
+<p class="reader-settings-hint">Reçois les nouveautés même lorsque le livre est fermé. Sur iPhone, ouvre l'application installée sur l'écran d'accueil.</p>
+<div id="tsoPushOptions" style="display:grid;gap:9px;margin:12px 0">
+<label style="display:flex;gap:10px;align-items:center;margin:0"><input type="checkbox" data-tso-push="chapters" checked style="width:auto"> Nouveaux chapitres</label>
+<label style="display:flex;gap:10px;align-items:center;margin:0"><input type="checkbox" data-tso-push="characters" checked style="width:auto"> Personnages</label>
+<label style="display:flex;gap:10px;align-items:center;margin:0"><input type="checkbox" data-tso-push="artifacts" checked style="width:auto"> Artefacts</label>
+<label style="display:flex;gap:10px;align-items:center;margin:0"><input type="checkbox" data-tso-push="lexicon" checked style="width:auto"> Lexique</label>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin:12px 0">
+<button class="btn" id="tsoPushEnable" type="button">Activer les notifications</button>
+<button class="btn" id="tsoPushDisable" type="button" hidden>Désactiver</button>
+</div>
+<p class="reader-settings-hint" id="tsoPushStatus" role="status" aria-live="polite">Notifications non activées sur cet appareil.</p>
+<details id="tsoPushDiagnostic"><summary style="cursor:pointer;font-size:12px">Diagnostic pour le premier test</summary>
+<p class="reader-settings-hint">Le jeton ci-dessous identifie cet appareil pour l'envoi de test. Ne le publie pas sur Internet.</p>
+<button class="btn" id="tsoPushCopy" type="button">Copier le jeton de cet appareil</button>
+</details>
 <div class="reader-settings-actions"><button class="btn" id="readerReset" type="button">Réinitialiser</button><button class="btn" id="close" type="button">Fermer</button></div></div></div><style>
 .stf__parent {
   position: relative;
@@ -621,4 +640,121 @@ for(const [kind,entries] of Object.entries(referenceCollections)){
       await registration.update();
     }catch(err){console.warn('Mise à jour de l’application indisponible',err)}
   });
-})();</script></body></html>
+})();</script>
+<script id="tso-v29-push" type="module">
+import {initializeApp} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-app.js';
+import {getMessaging, getToken, deleteToken, isSupported} from 'https://www.gstatic.com/firebasejs/10.14.1/firebase-messaging.js';
+
+const CONFIG={
+  apiKey: "AIzaSyB8SJEoHutE0suv7beC9bUZfOU50Wp-M5s",
+  authDomain: "tso-the-sovereign-order.firebaseapp.com",
+  projectId: "tso-the-sovereign-order",
+  storageBucket: "tso-the-sovereign-order.firebasestorage.app",
+  messagingSenderId: "345540545184",
+  appId: "1:345540545184:web:8b797cf91d5683f07f97c5"
+};
+const VAPID='BLHwBVMkO_TGs2CnhxGERSF6caR103GcUjJM35aMMQAdpnx-MJEy2KSH--SNNnalluR-5N99f-xO-rPCRoBwMXc';
+const WORKER='https://tso-push.erwanbenmoussa-c4e.workers.dev';
+const KEY='tso-v29-push-preferences';
+const ENABLED_KEY='tso-v29-push-enabled';
+const fields=[...document.querySelectorAll('[data-tso-push]')];
+const status=document.getElementById('tsoPushStatus');
+const enable=document.getElementById('tsoPushEnable');
+const disable=document.getElementById('tsoPushDisable');
+let messaging=null, currentToken='', busy=false;
+const say=message=>{status.textContent=message};
+function preferences(){return Object.fromEntries(fields.map(f=>[f.dataset.tsoPush,f.checked]))}
+function savePrefs(){try{localStorage.setItem(KEY,JSON.stringify(preferences()))}catch{}}
+try{
+ const stored=JSON.parse(localStorage.getItem(KEY)||'null');
+ if(stored)for(const f of fields)if(typeof stored[f.dataset.tsoPush]==='boolean')f.checked=stored[f.dataset.tsoPush];
+}catch{}
+async function supported(){
+ if(!('Notification' in window)||!('serviceWorker' in navigator)||!window.isSecureContext)return false;
+ return await isSupported();
+}
+async function getRegistration(){
+ // Reuse the existing TSO PWA worker; do not create a second worker with a conflicting scope.
+ const registration=await navigator.serviceWorker.register('./sw.js?v=29',{updateViaCache:'none'});
+ await registration.update();
+ return registration;
+}
+async function subscribe(){
+ const registration=await getRegistration();
+ const app=initializeApp(CONFIG,'tso-v29-push');
+ messaging=getMessaging(app);
+ const token=await getToken(messaging,{vapidKey:VAPID,serviceWorkerRegistration:registration});
+ if(!token)throw Error("Firebase n'a pas fourni de jeton.");
+ const res=await fetch(WORKER+'/subscribe',{
+  method:'POST',headers:{'Content-Type':'application/json'},
+  body:JSON.stringify({token,preferences:preferences()})
+ });
+ if(!res.ok)throw Error('Enregistrement Cloudflare impossible (HTTP '+res.status+').');
+ currentToken=token;
+ try{localStorage.setItem(ENABLED_KEY,'1')}catch{}
+ disable.hidden=false;
+ return token;
+}
+enable.addEventListener('click',async()=>{
+ if(busy)return;
+ busy=true;enable.disabled=true;
+ try{
+  if(!(await supported())){
+   say("Ce navigateur ne prend pas en charge Firebase Messaging. Sur iPhone, installe le livre depuis Safari sur l'écran d'accueil (iOS 16.4+).");return;
+  }
+  if(Notification.permission==='denied'){
+   say("Notifications bloquées dans les réglages de l'appareil. Autorise-les pour The Sovereign Order.");return;
+  }
+  const permission=await Notification.requestPermission();
+  if(permission!=='granted'){say('Autorisation non accordée.');return;}
+  say('Enregistrement auprès de Firebase et Cloudflare…');
+  await subscribe();savePrefs();
+  say('Notifications activées sur cet appareil. Tu peux maintenant effectuer un envoi de test.');
+ }catch(e){console.error('TSO push:',e);say('Activation impossible : '+e.message)}
+ finally{busy=false;enable.disabled=false}
+});
+for(const f of fields)f.addEventListener('change',async()=>{
+ savePrefs();
+ if(!currentToken)return;
+ try{
+  const r=await fetch(WORKER+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken,preferences:preferences()})});
+  if(!r.ok)throw Error('HTTP '+r.status);
+  say('Préférences enregistrées.');
+ }catch(e){say('Impossible de synchroniser les préférences : '+e.message)}
+});
+disable.addEventListener('click',async()=>{
+ if(!currentToken)return;
+ disable.disabled=true;
+ try{
+  const res=await fetch(WORKER+'/unsubscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token:currentToken})});
+  if(!res.ok)throw Error('HTTP '+res.status);
+  if(messaging)await deleteToken(messaging);
+  currentToken='';disable.hidden=true;
+  try{localStorage.removeItem(ENABLED_KEY)}catch{}
+  say('Notifications désactivées sur cet appareil.');
+ }catch(e){say('Désactivation impossible : '+e.message)}
+ finally{disable.disabled=false}
+});
+document.getElementById('tsoPushCopy').addEventListener('click',async()=>{
+ if(!currentToken){say("Active d'abord les notifications.");return}
+ try{await navigator.clipboard.writeText(currentToken);say('Jeton copié pour le test. Ne le publie pas.')}
+ catch{say('Copie du jeton indisponible sur cet appareil.')}
+});
+if(localStorage.getItem(ENABLED_KEY)==='1' && Notification.permission==='granted' && await supported()){
+ // No permission prompt on startup; renew token silently only when previously enabled.
+ try{
+  const registration=await navigator.serviceWorker.getRegistration();
+  if(registration){
+   const app=initializeApp(CONFIG,'tso-v29-push');
+   messaging=getMessaging(app);
+   const token=await getToken(messaging,{vapidKey:VAPID,serviceWorkerRegistration:registration});
+   if(token){
+    currentToken=token;disable.hidden=false;
+    await fetch(WORKER+'/subscribe',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,preferences:preferences()})});
+    say('Notifications activées sur cet appareil.');
+   }
+  }
+ }catch(e){console.warn('Renouvellement du jeton push:',e)}
+}
+</script>
+</body></html>
