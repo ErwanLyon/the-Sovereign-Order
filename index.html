@@ -205,6 +205,10 @@ body[data-reader-theme] .engine-error{background:var(--reader-ui);color:var(--re
 <details id="tsoPushDiagnostic"><summary style="cursor:pointer;font-size:12px">Diagnostic pour le premier test</summary>
 <p class="reader-settings-hint">Le jeton ci-dessous identifie cet appareil pour l'envoi de test. Ne le publie pas sur Internet.</p>
 <button class="btn" id="tsoPushCopy" type="button">Copier le jeton de cet appareil</button>
+<div style="margin-top:12px;display:grid;gap:8px">
+<button class="btn" id="tsoPushCheck" type="button">Vérifier l’abonnement Web Push</button>
+<pre id="tsoPushCheckResult" role="status" aria-live="polite" style="display:none;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.5 system-ui,sans-serif;padding:12px;border:1px solid var(--reader-ui-border,#806846);border-radius:8px;background:var(--reader-ui-button,#302b29);color:var(--reader-ui-text,#fff)"></pre>
+</div>
 </details>
 <div class="reader-settings-actions"><button class="btn" id="readerReset" type="button">Réinitialiser</button><button class="btn" id="close" type="button">Fermer</button></div></div></div><style>
 .stf__parent {
@@ -739,6 +743,42 @@ document.getElementById('tsoPushCopy').addEventListener('click',async()=>{
  if(!currentToken){say("Active d'abord les notifications.");return}
  try{await navigator.clipboard.writeText(currentToken);say('Jeton copié pour le test. Ne le publie pas.')}
  catch{say('Copie du jeton indisponible sur cet appareil.')}
+});
+document.getElementById('tsoPushCheck').addEventListener('click',async()=>{
+ const output=document.getElementById('tsoPushCheckResult');
+ const button=document.getElementById('tsoPushCheck');
+ output.style.display='block';output.textContent='Vérification en cours…';button.disabled=true;
+ try{
+  const lines=[];
+  lines.push('Contexte sécurisé : '+(window.isSecureContext?'oui':'non'));
+  lines.push('Notifications iOS : '+(('Notification' in window)?Notification.permission:'non disponibles'));
+  if(!('serviceWorker' in navigator)){
+   lines.push('Service Worker : non pris en charge');
+  }else{
+   const registration=await navigator.serviceWorker.getRegistration();
+   lines.push('Service Worker enregistré : '+(registration?'oui':'non'));
+   if(registration){
+    lines.push('Service Worker actif : '+(registration.active?'oui':'non'));
+    lines.push('Script actif : '+(registration.active?new URL(registration.active.scriptURL).pathname:'aucun'));
+    lines.push('Portée : '+new URL(registration.scope).pathname);
+    if(!registration.pushManager){
+     lines.push('PushManager : non disponible');
+    }else{
+     const subscription=await registration.pushManager.getSubscription();
+     lines.push('Abonnement Web Push : '+(subscription?'présent':'absent'));
+     if(subscription){
+      const endpoint=new URL(subscription.endpoint);
+      lines.push('Service Push (domaine) : '+endpoint.hostname);
+      lines.push('Clé de chiffrement : '+(subscription.getKey('p256dh')?'présente':'absente'));
+      lines.push('Clé d’authentification : '+(subscription.getKey('auth')?'présente':'absente'));
+     }
+    }
+   }
+  }
+  lines.push('Jeton Firebase dans cette session : '+(currentToken?'présent':'absent'));
+  output.textContent=lines.join('\n');
+ }catch(e){output.textContent='Diagnostic impossible : '+(e&&e.message?e.message:String(e))}
+ finally{button.disabled=false}
 });
 if(localStorage.getItem(ENABLED_KEY)==='1' && Notification.permission==='granted' && await supported()){
  // No permission prompt on startup; renew token silently only when previously enabled.
