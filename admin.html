@@ -396,9 +396,22 @@ $('publish').onclick=async()=>{
   const res=await fetch(api+'?ref='+encodeURIComponent(GH_BRANCH),{headers:githubHeaders(token),cache:'no-store'});
   if(!res.ok)throw Error(await githubError(res));
   const remote=await res.json();
-  if(!remote.sha||!remote.content)throw Error('Impossible de lire le fichier distant.');
+  if(!remote.sha)throw Error('Impossible de vérifier la version du fichier distant.');
+  // GitHub Contents API omet le contenu Base64 des fichiers de plus de 1 Mo.
+  // Dans ce cas, l'API Git Blobs permet de récupérer le contenu complet
+  // en utilisant le SHA déjà obtenu, sans modifier le fichier distant.
+  let remoteContent=remote.content;
+  if(!remoteContent){
+   ghMessage('Fichier volumineux détecté : récupération du contenu complet sur GitHub…');
+   const blobApi='https://api.github.com/repos/'+GH_OWNER+'/'+GH_REPO+'/git/blobs/'+encodeURIComponent(remote.sha);
+   const blobRes=await fetch(blobApi,{headers:githubHeaders(token),cache:'no-store'});
+   if(!blobRes.ok)throw Error('Lecture du fichier volumineux : '+await githubError(blobRes));
+   const blob=await blobRes.json();
+   if(blob.encoding!=='base64'||!blob.content)throw Error('GitHub ne fournit pas le contenu complet du fichier distant.');
+   remoteContent=blob.content;
+  }
   let remoteScenes;
-  try{remoteScenes=validate(JSON.parse(decodeGitHubBase64(remote.content)))}catch(e){throw Error('Le fichier GitHub ne correspond pas au format attendu : '+e.message)}
+  try{remoteScenes=validate(JSON.parse(decodeGitHubBase64(remoteContent)))}catch(e){throw Error('Le fichier GitHub ne correspond pas au format attendu : '+e.message)}
   if(baseline===null){
    throw Error('Pour éviter d’écraser des changements, recharge d’abord les scènes directement depuis le livre (ou exporte ton travail puis recharge la page). Les fichiers importés manuellement ne peuvent pas être publiés automatiquement sans vérification.');
   }
