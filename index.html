@@ -71,6 +71,7 @@ body.characters-open{overflow:hidden}
 window.TSONews=(()=>{
  const KEY='tso-v22-seen-v1';
  let events=[],seen=new Set(),ready=false;
+ const pendingScenes=new Set();
  const storage={get(){try{return JSON.parse(localStorage.getItem(KEY))}catch{return null}},put(v){try{localStorage.setItem(KEY,JSON.stringify(v))}catch{}}};
  const id=e=>e.id;
  function unseen(e){return !seen.has(id(e))}
@@ -96,6 +97,7 @@ window.TSONews=(()=>{
   });
  }
  function mark(type,name,src){
+  if(!ready&&type==='scene'){pendingScenes.add(name);return}
   let changed=false;
   for(const e of events){
    if(e.type!==type||e.name!==name||(src&&e.src!==src)||(type==='image'&&!src))continue;
@@ -111,7 +113,7 @@ window.TSONews=(()=>{
   const saved=storage.get();
   if(saved&&Array.isArray(saved.seen)){seen=new Set(saved.seen)}
   else{seen=new Set(events.map(id));storage.put({seen:[...seen]})}
-  ready=true;update();
+  ready=true;for(const name of pendingScenes)mark('scene',name);pendingScenes.clear();update();
  }
  init();
  return {has,mark,badge,update,get ready(){return ready}};
@@ -422,6 +424,18 @@ let offset=0;while(offset<total){let lo=offset+1,hi=total,best=offset;while(lo<=
 }else if(stored&&!window.__initialized){index=Math.max(0,pages.findIndex(p=>p.type===stored.type&&p.scene===stored.scene&&p.part===stored.part));window.__initialized=true}else if(old){let next=pages.findIndex(p=>p.type===old.type&&p.scene===oldScene&&p.part===oldPart);index=next>=0?next:Math.min(index,pages.length-1)}mountFlip()}
 function render(){let p=pages[index];page.className='page'+(p.type==='cover'?' cover':'');if(p.type==='cover'){page.innerHTML=`<img alt="Couverture The Sovereign Order" src="${images.cover}">`}else if(p.type==='title'){page.innerHTML='<div class="page-content" style="display:flex;flex-direction:column;justify-content:center;text-align:center"><div class="eyebrow" style="text-align:center">ÉDITION NUMÉRIQUE</div><h2 style="text-align:center;font-size:2.2em">THE SOVEREIGN ORDER</h2><p style="text-align:center">Chapitre 1 · La fondation de l’AXE</p><p style="text-align:center;font-style:italic">Version française</p></div>'}else if(p.type==='chapter'){page.innerHTML='<div class="page-content" style="display:flex;flex-direction:column;justify-content:center;text-align:center"><div class="eyebrow" style="text-align:center">THE SOVEREIGN ORDER</div><h2 style="text-align:center;font-size:2.2em">Chapitre '+(Math.floor(p.scene/5)+1)+'</h2></div>'}else if(p.type==='blank'||p.type==='boundary'){page.innerHTML=''}else{page.innerHTML=`<div class="page-content">${p.html}</div>`}if(p.type!=='cover'&&p.type!=='blank'&&p.type!=='boundary')page.insertAdjacentHTML('beforeend',`<div class="page-foot"><span>THE SOVEREIGN ORDER</span><span>${index} / ${pages.length-1}</span></div>`);$('status').textContent=`Page ${index+1} sur ${pages.length}`;v27Nav();}
 let flip=null, rebuilding=false;
+// Mark only the actual visible text pages, including both pages on desktop.
+function markVisibleScenes(){
+ if(!flip)return;
+ const collection=flip.getPageCollection();
+ const visible=collection.getSpread()[collection.getCurrentSpreadIndex()]||[];
+ for(const n of visible){
+  const p=pages[n];
+  if(p?.type==='text'&&Number.isInteger(p.scene)&&p.scene>=0){
+   window.TSONews.mark('scene',String(Number(scenes[p.scene]?.number)||p.scene+1));
+  }
+ }
+}
 function mountFlip(){
  const book=$('book');if(!window.St || !St.PageFlip){
    book.innerHTML='<div class="engine-error">Le moteur de pages n’a pas pu être chargé. Vérifie ta connexion Internet, puis recharge la page.</div>';
@@ -457,8 +471,10 @@ function mountFlip(){
    const p=pages[index];$('status').textContent=`Page ${index+1} sur ${pages.length}`;
    v27Nav();
    if(p.type!=='blank')safeStore.setItem(saveKey,JSON.stringify({type:p.type,scene:p.scene,part:p.part}));
+   markVisibleScenes();
    v27MaybeShift(p);
  });
+ markVisibleScenes();
  $('status').textContent=`Page ${index+1} sur ${pages.length}`;
  v27Nav();
 }
@@ -478,7 +494,7 @@ const buckets=new Map();
 scenes.forEach((scene,i)=>{const number=Number(scene.number)||i+1;const start=Math.floor(number/100)*100;if(!buckets.has(start))buckets.set(start,[]);buckets.get(start).push({scene,i,number});});
 for(const [start,items] of [...buckets.entries()].sort((a,b)=>a[0]-b[0])){
  const details=document.createElement('details');const summary=document.createElement('summary');summary.textContent=`Scènes ${start}+ (${items.length})`;summary.dataset.newsGroup=start;details.appendChild(summary);
- for(const item of items){const b=document.createElement('button');b.type='button';b.className='scene-entry';b.textContent=`${item.number} — ${item.scene.title||'Sans titre'}`;b.dataset.newsType='scene';b.dataset.newsName=String(item.number);b.onclick=()=>{jumpScene(item.i);window.TSONews.mark('scene',String(item.number));closeDrawer()};details.appendChild(b)}groups.appendChild(details);
+ for(const item of items){const b=document.createElement('button');b.type='button';b.className='scene-entry';b.textContent=`${item.number} — ${item.scene.title||'Sans titre'}`;b.dataset.newsType='scene';b.dataset.newsName=String(item.number);b.onclick=()=>{jumpScene(item.i);closeDrawer()};details.appendChild(b)}groups.appendChild(details);
 }
 $('tocBtn').dataset.newsType='scene';$('sceneCount').textContent=`${scenes.length} scène(s) disponibles`;setTimeout(()=>window.TSONews.update(),100);
 function closeDrawer(){drawer.classList.remove('open');$('tocBtn').setAttribute('aria-expanded','false')}

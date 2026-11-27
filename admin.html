@@ -114,11 +114,11 @@ function getParagraphs(){
  return paragraphs;
 }
 // V29 : groupes de 100 scènes, un seul groupe ouvert à la fois.
-let openSceneGroup=null;
-function render(){
+let openSceneGroup=undefined;
+function render(listOnly=false){
  const list=$('sceneList');list.replaceChildren();$('count').textContent='('+scenes.length+')';
  const total=Math.ceil(scenes.length/100);
- if(total&&(!Number.isInteger(openSceneGroup)||openSceneGroup<0||openSceneGroup>=total||Math.floor(selected/100)!==openSceneGroup))openSceneGroup=Math.floor(selected/100);
+ if(total&&(openSceneGroup===undefined||(openSceneGroup!==null&&(!Number.isInteger(openSceneGroup)||openSceneGroup<0||openSceneGroup>=total))))openSceneGroup=Math.floor(selected/100);
  for(let group=0;group<total;group++){
   const start=group*100,end=Math.min(start+100,scenes.length);
   const toggle=document.createElement('button');toggle.type='button';toggle.className='scene-group';
@@ -126,8 +126,7 @@ function render(){
   toggle.setAttribute('aria-expanded',String(openSceneGroup===group));
   const entries=document.createElement('div');entries.className='scene-group-list';entries.hidden=openSceneGroup!==group;
   toggle.onclick=()=>{
-   if(openSceneGroup===group){openSceneGroup=null;entries.hidden=true;toggle.setAttribute('aria-expanded','false')}
-   else {openSceneGroup=group;render()}
+   openSceneGroup=openSceneGroup===group?null:group;render(true);
   };
   list.appendChild(toggle);list.appendChild(entries);
   if(openSceneGroup===group){
@@ -140,6 +139,7 @@ function render(){
    }
   }
  }
+ if(listOnly)return;
  const scene=scenes[selected];$('editorTitle').textContent=scene?`Scène ${selected+1} · Chapitre ${Math.floor(selected/5)+1}`:'Aucune scène';
  for(const k of ['title','place','time'])$(k).value=scene?.[k]||'';
  $('content').innerHTML=scene?htmlToEditor(scene.paragraphs):'';
@@ -256,7 +256,7 @@ $('content').addEventListener('paste',e=>{
      paragraphs:imported.paragraphs,layout:'word-lines'};
    if(target===scenes.length)scenes.push(record);
    else scenes[target]=record;
-   selected=target;
+   selected=target;openSceneGroup=Math.floor(selected/100);
    dirty=true;
    render();
    $('feedback').textContent=(replacing?'Scène '+imported.number+' remplacée':'Scène '+imported.number+' créée')+
@@ -324,13 +324,13 @@ $('batchCommit').onclick=()=>{
  const count=batchCandidate.length;
  if(!confirm('Ajouter '+count+' scènes à la suite des '+scenes.length+' scènes actuelles ? Elles resteront locales jusqu’à la publication GitHub.'))return;
  for(const x of batchCandidate)scenes.push({title:x.title,place:x.place,time:x.time,paragraphs:x.paragraphs,layout:'word-lines'});
- selected=scenes.length-count;dirty=true;render();
+ selected=scenes.length-count;openSceneGroup=Math.floor(selected/100);dirty=true;render();
  batchCandidate=[];batchParagraphs=[];$('batchPaste').replaceChildren();$('batchCommit').disabled=true;
  $('batchReport').textContent=count+' scènes ajoutées localement. Vérifie-les dans la liste, puis publie l’ensemble sur GitHub en une seule opération. Mode notifications : '+($('newsMode').value==='catchup'?'Rattrapage (sans notifications)':'Publication normale')+'.';
 };
 $('content').addEventListener('input',()=>dirty=true);for(const k of ['title','place','time'])$(k).addEventListener('input',()=>dirty=true);
-$('save').onclick=()=>{save();render()};$('add').onclick=()=>{save();scenes.push({title:'',place:'',time:'',paragraphs:[],layout:'word-lines'});selected=scenes.length-1;dirty=true;render()};$('remove').onclick=()=>{if(!scenes.length||!confirm('Supprimer cette scène ?'))return;scenes.splice(selected,1);selected=Math.min(selected,scenes.length-1);dirty=true;render()};$('export').onclick=()=>{save();if(!scenes.length){alert('Aucune scène');return}const blob=new Blob([JSON.stringify({version:2,scenes},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='scenes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);dirty=false;$('feedback').textContent='Fichier téléchargé. Il reste à le déposer sur GitHub dans data/scenes.json.'};
-$('loadFile').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;scenes=validate(JSON.parse(await f.text()));selected=0;dirty=false;baseline=null;render();status(`${scenes.length} scènes importées.`)}catch(err){alert(err.message)}};
+$('save').onclick=()=>{save();render()};$('add').onclick=()=>{save();scenes.push({title:'',place:'',time:'',paragraphs:[],layout:'word-lines'});selected=scenes.length-1;openSceneGroup=Math.floor(selected/100);dirty=true;render()};$('remove').onclick=()=>{if(!scenes.length||!confirm('Supprimer cette scène ?'))return;scenes.splice(selected,1);selected=Math.min(selected,scenes.length-1);dirty=true;render()};$('export').onclick=()=>{save();if(!scenes.length){alert('Aucune scène');return}const blob=new Blob([JSON.stringify({version:2,scenes},null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='scenes.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);dirty=false;$('feedback').textContent='Fichier téléchargé. Il reste à le déposer sur GitHub dans data/scenes.json.'};
+$('loadFile').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;scenes=validate(JSON.parse(await f.text()));selected=0;openSceneGroup=undefined;dirty=false;baseline=null;render();status(`${scenes.length} scènes importées.`)}catch(err){alert(err.message)}};
 
 $('newsMode').value=localStorage.getItem('tso-v22-scene-mode')==='normal'?'normal':'catchup';
 $('newsMode').onchange=()=>localStorage.setItem('tso-v22-scene-mode',$('newsMode').value);
